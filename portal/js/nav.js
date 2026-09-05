@@ -32,6 +32,7 @@ function zpInitShell(opts) {
     if (chipSub) chipSub.textContent = c.contact;
     if (chipInitials) chipInitials.textContent = c.initials;
   } else {
+    // agency and team sessions both carry { name, role }
     const a = session.record;
     if (chipName) chipName.textContent = a.name;
     if (chipSub) chipSub.textContent = a.role;
@@ -59,9 +60,9 @@ function zpBadge(status, extraClass) {
   const map = {
     active: 'success', paid: 'success', completed: 'success', approved: 'success', converted: 'success', configured: 'success',
     provisioning: 'info', submitted: 'info', quoted: 'info', 'in-progress': 'info', shared: 'info',
-    'in-development': 'warning', unpaid: 'warning', reviewing: 'warning', pending: 'muted', requested: 'warning',
-    overdue: 'danger', rejected: 'danger', cancelled: 'danger', 'rotate-requested': 'danger',
-    paused: 'muted', draft: 'muted', 'not-needed': 'muted'
+    'in-development': 'warning', unpaid: 'warning', reviewing: 'warning', pending: 'muted', requested: 'warning', 'in-review': 'warning',
+    overdue: 'danger', rejected: 'danger', cancelled: 'danger', 'rotate-requested': 'danger', blocked: 'danger',
+    paused: 'muted', draft: 'muted', 'not-needed': 'muted', todo: 'muted'
   };
   const tone = map[status] || 'muted';
   return `<span class="badge badge--${tone}${extraClass ? ' ' + extraClass : ''}">${zpStatusLabel(status)}</span>`;

@@ -24,21 +24,27 @@ function zpSession() {
 }
 
 /**
- * Guards a page. Pass the required session type ('customer' | 'agency').
+ * Guards a page. Pass the required session type ('customer' | 'agency' | 'team'),
+ * or an array of acceptable types (e.g. ['agency', 'team'] for a shared reference page).
  * Redirects to login.html when there's no valid session and returns null;
  * otherwise returns { type, id, record } for the caller to use.
  */
 function zpRequireAuth(requiredType) {
+  const allowed = Array.isArray(requiredType) ? requiredType : (requiredType ? [requiredType] : null);
+  const loginTarget = allowed && allowed[0] !== 'customer' ? allowed[0] : null;
+  const loginUrl = loginTarget ? 'login.html?as=' + loginTarget : 'login.html';
   const s = zpSession();
   if (!s || !s.type || !s.id) {
-    window.location.href = requiredType === 'agency' ? 'login.html?as=agency' : 'login.html';
+    window.location.href = loginUrl;
     return null;
   }
-  if (requiredType && s.type !== requiredType) {
-    window.location.href = requiredType === 'agency' ? 'login.html?as=agency' : 'login.html';
+  if (allowed && allowed.indexOf(s.type) === -1) {
+    window.location.href = loginUrl;
     return null;
   }
-  const record = s.type === 'agency' ? ZP.data.agencyUsers.find(a => a.id === s.id) : zpGetCustomer(s.id);
+  const record = s.type === 'agency' ? ZP.data.agencyUsers.find(a => a.id === s.id)
+    : s.type === 'team' ? zpGetTeamMember(s.id)
+    : zpGetCustomer(s.id);
   if (!record) {
     zpLogout();
     window.location.href = 'login.html';

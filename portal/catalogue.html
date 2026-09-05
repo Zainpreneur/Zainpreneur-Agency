@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Catalogue — Zainpreneur Agency</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="team-dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Team Workspace</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="team-dashboard.html" data-nav="tasks" id="backNavLink"><span class="icon">←</span>Back</a>
+      <a href="catalogue.html" data-nav="catalogue"><span class="icon">📚</span>Software Catalogue</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Software Catalogue</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <p class="section-sub">Every hosting provider, platform, and tech-stack option the agency quotes and deploys from — used to build precise, structured task configurations rather than free-text notes.</p>
+
+      <div class="catalogue-section">
+        <div class="panel">
+          <div class="panel-header"><h2>🖥️ Hosting Providers &amp; Plans</h2></div>
+          <div class="panel-body" id="hostingSection"></div>
+        </div>
+      </div>
+
+      <div class="catalogue-section">
+        <div class="panel">
+          <div class="panel-header"><h2>🧩 Software Platforms</h2></div>
+          <div class="panel-body" id="platformSection"></div>
+        </div>
+      </div>
+
+      <div class="catalogue-section">
+        <div class="panel">
+          <div class="panel-header"><h2>📱 Device Types, OS Targets &amp; Connectivity</h2></div>
+          <div class="panel-body" id="deviceSection"></div>
+        </div>
+      </div>
+
+      <div class="catalogue-section">
+        <div class="panel">
+          <div class="panel-header"><h2>🛠️ Custom Development Tech Stack</h2></div>
+          <div class="panel-body" id="stackSection"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/catalogue-page.js"></script>
+</body>
+</html>

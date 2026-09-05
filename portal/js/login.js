@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  const tabCustomer = document.getElementById('tabCustomer');
-  const tabAgency = document.getElementById('tabAgency');
+  const tabs = { customer: document.getElementById('tabCustomer'), agency: document.getElementById('tabAgency'), team: document.getElementById('tabTeam') };
   const formTitle = document.getElementById('formTitle');
   const formSub = document.getElementById('formSub');
   const demoLabel = document.getElementById('demoLabel');
@@ -9,16 +8,36 @@ document.addEventListener('DOMContentLoaded', function () {
   const passwordInput = document.getElementById('password');
   const alertBox = document.getElementById('alertBox');
 
+  const MODES = {
+    customer: {
+      title: 'Sign in to your account', sub: 'Track your deployed services, billing, and support requests.',
+      demoLabel: 'Demo customer accounts — click to sign in',
+      items: () => ZP.data.customers, redirect: 'dashboard.html',
+      find: zpFindCustomerByEmail, errorMsg: 'We couldn\'t find an account with those credentials. Try one of the demo accounts below.'
+    },
+    agency: {
+      title: 'Agency console sign in', sub: 'Internal access — manage customers, services, and billing.',
+      demoLabel: 'Demo agency account — click to sign in',
+      items: () => ZP.data.agencyUsers, redirect: 'agency.html',
+      find: zpFindAgencyByEmail, errorMsg: 'Invalid agency credentials.'
+    },
+    team: {
+      title: 'Delivery team sign in', sub: 'View your assigned tasks and work the deployment catalogue.',
+      demoLabel: 'Demo team accounts — click to sign in',
+      items: () => ZP.data.teamUsers, redirect: 'team-dashboard.html',
+      find: zpFindTeamByEmail, errorMsg: 'Invalid team credentials.'
+    }
+  };
+
   let mode = 'customer';
 
-  // Deep-link support: login.html?as=agency (used by zpRequireAuth redirects)
+  // Deep-link support: login.html?as=agency / ?as=team (used by zpRequireAuth redirects)
   const params = new URLSearchParams(window.location.search);
-  if (params.get('as') === 'agency') mode = 'agency';
+  if (MODES[params.get('as')]) mode = params.get('as');
 
   function renderDemoAccounts() {
     demoList.innerHTML = '';
-    const items = mode === 'customer' ? ZP.data.customers : ZP.data.agencyUsers;
-    items.forEach(item => {
+    MODES[mode].items().forEach(item => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'demo-account-btn';
@@ -37,44 +56,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setMode(next) {
     mode = next;
-    tabCustomer.classList.toggle('active', mode === 'customer');
-    tabCustomer.setAttribute('aria-selected', mode === 'customer');
-    tabAgency.classList.toggle('active', mode === 'agency');
-    tabAgency.setAttribute('aria-selected', mode === 'agency');
-    formTitle.textContent = mode === 'customer' ? 'Sign in to your account' : 'Agency console sign in';
-    formSub.textContent = mode === 'customer'
-      ? 'Track your deployed services, billing, and support requests.'
-      : 'Internal access — manage customers, services, and billing.';
-    demoLabel.textContent = mode === 'customer' ? 'Demo customer accounts — click to sign in' : 'Demo agency account — click to sign in';
+    Object.keys(tabs).forEach(key => {
+      tabs[key].classList.toggle('active', key === mode);
+      tabs[key].setAttribute('aria-selected', key === mode);
+    });
+    formTitle.textContent = MODES[mode].title;
+    formSub.textContent = MODES[mode].sub;
+    demoLabel.textContent = MODES[mode].demoLabel;
     alertBox.innerHTML = '';
     renderDemoAccounts();
   }
 
-  tabCustomer.addEventListener('click', () => setMode('customer'));
-  tabAgency.addEventListener('click', () => setMode('agency'));
+  Object.keys(tabs).forEach(key => tabs[key].addEventListener('click', () => setMode(key)));
 
   function doLogin() {
     const email = emailInput.value.trim();
     const password = passwordInput.value;
     alertBox.innerHTML = '';
 
-    if (mode === 'customer') {
-      const c = zpFindCustomerByEmail(email);
-      if (!c || c.password !== password) {
-        alertBox.innerHTML = '<div class="alert alert-danger">We couldn\'t find an account with those credentials. Try one of the demo accounts below.</div>';
-        return;
-      }
-      zpLogin('customer', c.id);
-      window.location.href = 'dashboard.html';
-    } else {
-      const a = zpFindAgencyByEmail(email);
-      if (!a || a.password !== password) {
-        alertBox.innerHTML = '<div class="alert alert-danger">Invalid agency credentials.</div>';
-        return;
-      }
-      zpLogin('agency', a.id);
-      window.location.href = 'agency.html';
+    const cfg = MODES[mode];
+    const record = cfg.find(email);
+    if (!record || record.password !== password) {
+      alertBox.innerHTML = `<div class="alert alert-danger">${cfg.errorMsg}</div>`;
+      return;
     }
+    zpLogin(mode, record.id);
+    window.location.href = cfg.redirect;
   }
 
   document.getElementById('loginForm').addEventListener('submit', function (e) {
