@@ -54,7 +54,11 @@ const ZP_SEED = {
       status: 'active', deployedDate: '2024-03-10',
       description: 'Fully managed Odoo ERP deployment (Sales, Inventory, Accounting) hosted on a dedicated Hostinger VPS KVM 2 instance with automated daily backups.',
       billing: { model: 'recurring', cycle: 'monthly', ourCost: 12.99, customerPrice: 49.00, currency: 'USD', nextRenewal: '2026-10-10' },
-      milestones: null
+      milestones: null,
+      accounts: [
+        { id: 'acc-001', provider: 'Hostinger', purpose: 'VPS Control Panel (hPanel)', loginUrl: 'https://hpanel.hostinger.com', username: 'sarah@aegisretail.com', status: 'configured', sharedVia: 'Shared via 1Password link on 2024-03-08', lastUpdated: '2024-03-10', notes: 'Root SSH key kept on file separately from this portal.' },
+        { id: 'acc-002', provider: 'Odoo', purpose: 'ERP Admin Login', loginUrl: 'https://erp.aegisretail.com/web/login', username: 'admin@aegisretail.com', status: 'configured', sharedVia: 'Provided during onboarding call', lastUpdated: '2024-03-10', notes: '' }
+      ]
     },
     {
       id: 'svc-002', customerId: 'cust-a', name: 'Inventory Sync Module',
@@ -70,6 +74,9 @@ const ZP_SEED = {
         { name: 'Shopify Integration (Sprint 2)', status: 'in-progress', date: null },
         { name: 'QA & UAT', status: 'pending', date: null },
         { name: 'Go-Live & Handover', status: 'pending', date: null }
+      ],
+      accounts: [
+        { id: 'acc-003', provider: 'Shopify', purpose: 'Admin API access (private app)', loginUrl: 'https://aegisretail.myshopify.com/admin', username: 'sarah@aegisretail.com', status: 'requested', sharedVia: null, lastUpdated: '2026-08-20', notes: 'Needed to finish the Sprint 2 integration work.' }
       ]
     },
     {
@@ -79,7 +86,10 @@ const ZP_SEED = {
       status: 'active', deployedDate: '2024-08-01',
       description: 'Public storefront hosted on a dedicated VPS with weekly automated backups and a staging environment for safe releases.',
       billing: { model: 'recurring', cycle: 'monthly', ourCost: 8.49, customerPrice: 35.00, currency: 'USD', nextRenewal: '2026-09-15' },
-      milestones: null
+      milestones: null,
+      accounts: [
+        { id: 'acc-004', provider: 'Hostinger', purpose: 'VPS Control Panel (hPanel)', loginUrl: 'https://hpanel.hostinger.com', username: 'marcus@bluewavelog.com', status: 'rotate-requested', sharedVia: 'Shared via password manager link on 2024-07-28', lastUpdated: '2026-08-15', notes: 'Migration work is complete — please rotate this password now that we’re done using it.' }
+      ]
     },
     {
       id: 'svc-004', customerId: 'cust-b', name: 'Priority Maintenance Retainer',
@@ -121,7 +131,10 @@ const ZP_SEED = {
       status: 'provisioning', deployedDate: null,
       description: 'ERP environment currently being provisioned; go-live is scheduled once data migration from the legacy system finishes.',
       billing: { model: 'recurring', cycle: 'monthly', ourCost: 24.99, customerPrice: 89.00, currency: 'USD', nextRenewal: '2026-10-01' },
-      milestones: null
+      milestones: null,
+      accounts: [
+        { id: 'acc-005', provider: 'Hostinger', purpose: 'VPS Control Panel (hPanel)', loginUrl: 'https://hpanel.hostinger.com', username: 'devon@nimbusfoods.com', status: 'requested', sharedVia: null, lastUpdated: '2026-08-25', notes: 'Waiting on the customer to share access before we can begin provisioning.' }
+      ]
     }
   ],
 
@@ -209,6 +222,33 @@ function zpGetRequestsForCustomer(customerId) {
 }
 function zpGetService(id) { return ZP.data.services.find(s => s.id === id) || null; }
 function zpGetInvoice(id) { return ZP.data.invoices.find(i => i.id === id) || null; }
+
+/* ---------------------------------- Connected accounts (references only — no passwords) ----------------------------------
+   The portal never stores third-party passwords. Each entry tracks WHICH account exists
+   (provider, purpose, login URL, username) and its access-sharing STATUS — never the secret
+   itself. See the notice rendered above every accounts list in services.js / agency.js. */
+
+function zpGetAccountsForService(serviceId) {
+  const s = zpGetService(serviceId);
+  return (s && s.accounts) || [];
+}
+
+function zpGetAllAccountsForCustomer(customerId) {
+  const services = zpGetServicesForCustomer(customerId);
+  const out = [];
+  services.forEach(s => {
+    (s.accounts || []).forEach(acc => out.push({ ...acc, serviceId: s.id, serviceName: s.name }));
+  });
+  return out;
+}
+
+function zpFindAccountAndService(accountId) {
+  for (const s of ZP.data.services) {
+    const acc = (s.accounts || []).find(a => a.id === accountId);
+    if (acc) return { account: acc, service: s };
+  }
+  return null;
+}
 
 /* ---------------------------------- Derived / intelligence ---------------------------------- */
 
@@ -330,6 +370,8 @@ const ZP_STATUS_LABEL = {
   paid: 'Paid', unpaid: 'Unpaid', overdue: 'Overdue', draft: 'Draft',
   submitted: 'Submitted', reviewing: 'Under Review', quoted: 'Quoted',
   approved: 'Approved', converted: 'Converted', rejected: 'Declined',
-  pending: 'Pending', 'in-progress': 'In Progress'
+  pending: 'Pending', 'in-progress': 'In Progress',
+  requested: 'Access Requested', shared: 'Shared Securely', configured: 'Configured',
+  'rotate-requested': 'Please Rotate Password', 'not-needed': 'Not Required'
 };
 function zpStatusLabel(s) { return ZP_STATUS_LABEL[s] || s; }

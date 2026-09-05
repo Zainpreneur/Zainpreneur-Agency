@@ -82,6 +82,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  document.getElementById('customerModalBody').addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-action="mark-configured"], [data-action="mark-configured-rotate"]');
+    if (!btn) return;
+    const found = zpFindAccountAndService(btn.getAttribute('data-acc'));
+    if (!found) return;
+    const today = ZP_TODAY.toISOString().slice(0, 10);
+    const rotate = btn.getAttribute('data-action') === 'mark-configured-rotate';
+    found.account.status = rotate ? 'rotate-requested' : 'configured';
+    found.account.lastUpdated = today;
+    found.account.notes = rotate
+      ? 'Setup complete — customer asked to rotate this password.'
+      : 'Configured by the agency on ' + today + '.';
+    zpPersist();
+    openCustomerModal(found.service.customerId);
+    renderCustomers();
+  });
+
   function openCustomerModal(custId) {
     const c = zpGetCustomer(custId);
     const services = zpGetServicesForCustomer(custId);
@@ -122,8 +139,44 @@ document.addEventListener('DOMContentLoaded', function () {
         <thead><tr><th>Invoice</th><th>Date</th><th>Amount</th><th>Status</th></tr></thead>
         <tbody>${invoiceRows}</tbody>
       </table></div>
+      ${renderAgencyAccountsSection(custId)}
     `;
     document.getElementById('customerModal').classList.add('open');
+  }
+
+  function renderAgencyAccountsSection(custId) {
+    const accounts = zpGetAllAccountsForCustomer(custId);
+    const rows = accounts.map(acc => {
+      let actions = '';
+      if (acc.status === 'shared') {
+        actions = `<button type="button" class="btn btn-secondary btn-sm" data-action="mark-configured" data-acc="${acc.id}">Mark Configured</button>
+                   <button type="button" class="btn btn-primary btn-sm" data-action="mark-configured-rotate" data-acc="${acc.id}">Configured — Ask to Rotate</button>`;
+      } else if (acc.status === 'requested') {
+        actions = `<span class="text-muted" style="font-size:0.78rem;">Waiting on customer</span>`;
+      } else if (acc.status === 'rotate-requested') {
+        actions = `<span class="text-muted" style="font-size:0.78rem;">Waiting on customer to rotate</span>`;
+      }
+      return `<tr>
+        <td>${acc.provider}<br><span class="text-muted" style="font-size:0.78rem;">${acc.purpose}</span></td>
+        <td>${acc.serviceName}</td>
+        <td>${acc.username || '—'}</td>
+        <td>${zpBadge(acc.status)}</td>
+        <td>${zpFormatDate(acc.lastUpdated)}</td>
+        <td>${actions}</td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="6" class="table-empty">No connected accounts on file.</td></tr>`;
+
+    return `
+      <h3 style="font-size:0.95rem;margin:18px 0 10px;">Account Access</h3>
+      <div class="account-security-notice">
+        <span class="ico">🔒</span>
+        <span>Passwords are never stored in this portal — customers share them out-of-band. This table only tracks status. After using a shared credential, mark it configured and ask the customer to rotate it.</span>
+      </div>
+      <div class="table-wrap"><table class="zp-table">
+        <thead><tr><th>Account</th><th>Service</th><th>Username</th><th>Status</th><th>Updated</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+    `;
   }
 
   /* ---------------------------------- Requests ---------------------------------- */

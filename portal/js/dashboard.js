@@ -11,9 +11,19 @@ document.addEventListener('DOMContentLoaded', function () {
     .slice()
     .sort((a, b) => new Date(b.issueDate) - new Date(a.issueDate));
 
-  /* --- Renewal / overdue alert banner --- */
+  /* --- Renewal / overdue / account-access alert banner --- */
   const alertHost = document.getElementById('renewalAlert');
   const alerts = [];
+
+  const pendingAccounts = zpGetAllAccountsForCustomer(customer.id).filter(a => a.status === 'requested' || a.status === 'rotate-requested');
+  pendingAccounts.forEach(a => {
+    if (a.status === 'rotate-requested') {
+      alerts.push(`<div class="alert alert-danger">🔒 Please rotate your <strong>${a.provider}</strong> password for <em>${a.serviceName}</em> now that setup is complete. <a href="services.html?svc=${a.serviceId}" style="color:inherit;font-weight:700;">Review →</a></div>`);
+    } else {
+      alerts.push(`<div class="alert alert-warning">🔑 We're waiting on access to your <strong>${a.provider}</strong> account for <em>${a.serviceName}</em> to continue setup. <a href="services.html?svc=${a.serviceId}" style="color:inherit;font-weight:700;">Review →</a></div>`);
+    }
+  });
+
   if (stats.overdueCount > 0) {
     alerts.push(`<div class="alert alert-danger">⚠️ You have ${stats.overdueCount} overdue invoice${stats.overdueCount > 1 ? 's' : ''} totaling ${zpFormatCurrency(invoices.filter(i => zpEffectiveInvoiceStatus(i) === 'overdue').reduce((s, i) => s + zpInvoiceTotal(i), 0))}. <a href="invoices.html" style="color:inherit;font-weight:700;">Review invoices →</a></div>`);
   }

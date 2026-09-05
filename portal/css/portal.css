@@ -318,6 +318,30 @@ table.zp-table tbody tr.clickable { cursor: pointer; }
 .kv-list .kv .k { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
 .kv-list .kv .v { font-size: 0.92rem; font-weight: 600; }
 
+/* ---------------------------------- Connected accounts ---------------------------------- */
+
+.account-item {
+  border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px;
+  margin-bottom: 10px; background: var(--surface-alt);
+}
+.account-item .acc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.account-item .acc-title { font-weight: 700; font-size: 0.9rem; }
+.account-item .acc-purpose { color: var(--muted); font-size: 0.8rem; }
+.account-item .acc-meta { font-size: 0.8rem; color: var(--ink-soft); margin-top: 6px; }
+.account-item .acc-meta a { color: var(--brand); text-decoration: none; word-break: break-all; }
+.account-item .acc-meta a:hover { text-decoration: underline; }
+.account-item .acc-notes { font-size: 0.78rem; color: var(--muted); margin-top: 6px; font-style: italic; }
+.account-item .acc-actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+.account-item.needs-action { border-color: var(--danger); background: var(--danger-bg); }
+.account-item.needs-action .acc-notes { color: #7f1d1d; }
+
+.account-security-notice {
+  display: flex; gap: 10px; align-items: flex-start; background: var(--surface-sunken);
+  border-radius: var(--radius-sm); padding: 12px 14px; font-size: 0.82rem; color: var(--ink-soft); margin-bottom: 14px;
+}
+.account-security-notice .ico { font-size: 1.1rem; flex-shrink: 0; }
+.account-security-notice strong { color: var(--ink); }
+
 /* ---------------------------------- Invoice layout ---------------------------------- */
 
 .invoice-doc { border: 1px solid var(--border); border-radius: var(--radius); padding: 26px; }
