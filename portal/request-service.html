@@ -49,34 +49,13 @@
         <div class="panel-body">
           <div id="formAlert"></div>
           <h2 class="section-title">1. What kind of service do you need?</h2>
-          <p class="section-sub">Pick a category — the form below adapts to what we'll need from you.</p>
+          <p class="section-sub">Pick a category and configure it precisely — the more you tell us here, the faster we can scope and quote it.</p>
 
-          <div class="category-picker" id="categoryPicker">
-            <button type="button" class="category-option" data-cat="infrastructure">
-              <span class="icon">🖥️</span>
-              <span class="title">Infrastructure &amp; Hosting</span>
-              <span class="desc">VPS, servers, backups, SSL — the ground your software runs on.</span>
-            </button>
-            <button type="button" class="category-option" data-cat="software-platform">
-              <span class="icon">🧩</span>
-              <span class="title">Software Platform Deployment</span>
-              <span class="desc">Odoo, WordPress, WooCommerce and other off-the-shelf platforms, configured for you.</span>
-            </button>
-            <button type="button" class="category-option" data-cat="custom-development">
-              <span class="icon">🛠️</span>
-              <span class="title">Custom Development</span>
-              <span class="desc">Bespoke software built from scratch to your spec.</span>
-            </button>
-            <button type="button" class="category-option" data-cat="maintenance">
-              <span class="icon">🔧</span>
-              <span class="title">Maintenance &amp; Support</span>
-              <span class="desc">Ongoing monitoring, patching and support for something already live.</span>
-            </button>
-          </div>
+          <div id="configuratorMount"></div>
 
           <form id="requestForm">
             <div class="dynamic-fields" id="commonFields" style="display:none;">
-              <h2 class="section-title">2. Tell us about the project</h2>
+              <h2 class="section-title" style="border-top:1px dashed var(--border);padding-top:20px;margin-top:20px;">2. Tell us about the project</h2>
               <div class="form-grid">
                 <div class="field">
                   <label for="title">Project title</label>
@@ -95,8 +74,6 @@
                 <label for="description">Describe what you need</label>
                 <textarea id="description" required placeholder="The more detail, the faster we can scope this."></textarea>
               </div>
-
-              <div id="categorySpecificFields"></div>
 
               <div class="form-grid">
                 <div class="field">
@@ -143,6 +120,7 @@
 </div>
 
 <script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/request.js"></script>

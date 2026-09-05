@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </div>
       <h3 style="margin:20px 0 8px;font-size:0.95rem;">Technology Stack</h3>
       <div>${s.stack.map(t => `<span class="chip">${t}</span>`).join('')}</div>
+      ${s.config ? `<h3 style="margin:20px 0 8px;font-size:0.95rem;">Delivery &amp; Configuration</h3>${zpRenderConfigDetail(s.config)}` : ''}
       ${milestonesHtml}
       ${invoicesHtml}
       ${renderAccountsSection(s)}

@@ -263,11 +263,12 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
       tbody.innerHTML = requests.map(r => {
         const c = zpGetCustomer(r.customerId);
+        const catDef = zpServiceCategoryDef(r.serviceCategoryId);
         const actionable = r.status === 'submitted' || r.status === 'reviewing';
         return `<tr>
           <td>${c ? c.company : '—'}</td>
           <td>${r.title}</td>
-          <td>${zpCategoryIcon(r.category)} ${zpCategoryLabel(r.category)}</td>
+          <td>${catDef ? catDef.icon + ' ' + catDef.label : zpCategoryIcon(r.category) + ' ' + zpCategoryLabel(r.category)}</td>
           <td>${zpFormatDate(r.submittedDate)}</td>
           <td>${r.budgetRange}</td>
           <td>${zpBadge(r.status)}</td>
@@ -285,73 +286,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ---------------------------------- Catalogue-driven quote form ---------------------------------- */
 
-  function renderCheckGrid(containerId, items, type, groupName) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = items.map((item, i) => {
-      const value = typeof item === 'string' ? item : item.id;
-      const label = typeof item === 'string' ? item : item.label;
-      const id = groupName + '_' + i;
-      return `<div class="check-pill">
-        <input type="${type}" name="${groupName}" id="${id}" value="${value}">
-        <label for="${id}">${label}</label>
-      </div>`;
-    }).join('');
-  }
-  function getCheckedValues(groupName) {
-    return Array.from(document.querySelectorAll(`input[name="${groupName}"]:checked`)).map(el => el.value);
-  }
-  function getRadioValue(groupName) {
-    const el = document.querySelector(`input[name="${groupName}"]:checked`);
-    return el ? el.value : null;
-  }
-  function clearCheckGroup(groupName) {
-    document.querySelectorAll(`input[name="${groupName}"]`).forEach(el => { el.checked = false; });
-  }
-
-  function updateHostingPlans() {
-    const provider = zpCatProvider(document.getElementById('q_hostingProvider').value);
-    const sel = document.getElementById('q_hostingPlan');
-    sel.innerHTML = provider
-      ? provider.plans.map(p => `<option value="${p.id}">${p.label} — ${p.specs}</option>`).join('')
-      : '<option value="">— Select a provider first —</option>';
-  }
-
-  function updatePlatformDependent() {
-    const platform = zpCatPlatform(document.getElementById('q_platform').value);
-    const wrap = document.getElementById('dataBackendFieldWrap');
-    const sel = document.getElementById('q_dataBackend');
-    if (platform && platform.dataBackends) {
-      wrap.style.display = '';
-      sel.innerHTML = '<option value="">— None —</option>' + platform.dataBackends.map(id => `<option value="${id}">${zpCatDataBackend(id).label}</option>`).join('');
-    } else {
-      wrap.style.display = 'none';
-      sel.innerHTML = '<option value="">— None —</option>';
+  const configurator = zpMountConfigurator(document.getElementById('quoteConfiguratorMount'), {
+    onChange: () => {
+      const suggested = configurator.getSuggestedPrice();
+      document.getElementById('q_suggestedPrice').value = suggested != null
+        ? zpFormatCurrency(suggested, 'USD') + ' (edit "Price charged" below to apply)'
+        : '';
     }
-  }
+  });
 
-  function toggleCategorySections() {
-    const cat = document.getElementById('q_category').value;
-    document.getElementById('hostingFieldsRow').style.display = cat === 'infrastructure' ? '' : 'none';
-    document.getElementById('platformFieldRow').style.display = (cat === 'infrastructure' || cat === 'software-platform') ? '' : 'none';
-    document.getElementById('techStackSection').style.display = cat === 'custom-development' ? '' : 'none';
-  }
-
-  function initCatalogueFields() {
-    document.getElementById('q_hostingProvider').innerHTML = '<option value="">— None —</option>' + ZP_CATALOGUE.hostingProviders.map(p => `<option value="${p.id}">${p.label}</option>`).join('');
-    document.getElementById('q_hostingProvider').addEventListener('change', updateHostingPlans);
-
-    document.getElementById('q_platform').innerHTML = '<option value="">— None / fully custom —</option>' + ZP_CATALOGUE.platforms.map(p => `<option value="${p.id}">${p.label}</option>`).join('');
-    document.getElementById('q_platform').addEventListener('change', updatePlatformDependent);
-
-    renderCheckGrid('q_deviceTypes', ZP_CATALOGUE.deviceTypes, 'checkbox', 'q_deviceTypes');
-    renderCheckGrid('q_osTargets', ZP_CATALOGUE.osTargets, 'checkbox', 'q_osTargets');
-    renderCheckGrid('q_connectivity', ZP_CATALOGUE.connectivityModes, 'radio', 'q_connectivity');
-    Object.keys(ZP_TECH_LAYER_LABEL).forEach(layer => renderCheckGrid('q_stack_' + layer, ZP_CATALOGUE.techStack[layer], 'checkbox', 'q_stack_' + layer));
-
-    document.getElementById('q_category').addEventListener('change', toggleCategorySections);
-    document.getElementById('q_assignee').innerHTML = '<option value="">— Unassigned —</option>' + ZP.data.teamUsers.map(t => `<option value="${t.id}">${t.name} — ${t.role}</option>`).join('');
-  }
-  initCatalogueFields();
+  document.getElementById('q_assignee').innerHTML = '<option value="">— Unassigned —</option>' + ZP.data.teamUsers.map(t => `<option value="${t.id}">${t.name} — ${t.role}</option>`).join('');
 
   function openQuoteModal(reqId) {
     const r = ZP.data.requests.find(r => r.id === reqId);
@@ -364,22 +308,14 @@ document.addEventListener('DOMContentLoaded', function () {
         <div>
           <strong>${c.company}</strong> — ${r.title}<br>
           <span style="font-size:0.85rem;">${r.description}</span><br>
-          <span style="font-size:0.8rem;opacity:0.85;">Budget: ${r.budgetRange} · Timeline: ${r.timeline} · Priority: ${r.priority || 'normal'}${r.extras && r.extras.length ? '<br>' + r.extras.join(' · ') : ''}</span>
+          <span style="font-size:0.8rem;opacity:0.85;">Budget: ${r.budgetRange} · Timeline: ${r.timeline} · Priority: ${r.priority || 'normal'}</span>
         </div>
       </div>
     `;
 
     document.getElementById('q_name').value = r.title;
-    document.getElementById('q_category').value = r.category;
-    document.getElementById('q_hostingProvider').value = '';
-    updateHostingPlans();
-    document.getElementById('q_platform').value = '';
-    updatePlatformDependent();
-    clearCheckGroup('q_deviceTypes');
-    clearCheckGroup('q_osTargets');
-    clearCheckGroup('q_connectivity');
-    Object.keys(ZP_TECH_LAYER_LABEL).forEach(layer => clearCheckGroup('q_stack_' + layer));
-    toggleCategorySections();
+    document.getElementById('q_suggestedPrice').value = '';
+    configurator.setState(r.serviceCategoryId, r.config);
 
     document.getElementById('q_model').value = r.category === 'custom-development' ? 'one-time' : 'recurring';
     document.getElementById('q_cycle').value = 'monthly';
@@ -407,14 +343,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!r) return;
 
     const name = document.getElementById('q_name').value.trim();
-    const category = document.getElementById('q_category').value;
-    const hostingProvider = document.getElementById('q_hostingProvider').value || null;
-    const hostingPlan = hostingProvider ? (document.getElementById('q_hostingPlan').value || null) : null;
-    const platform = document.getElementById('q_platform').value || null;
-    const dataBackend = document.getElementById('q_dataBackend').value || null;
-    const deviceTypes = getCheckedValues('q_deviceTypes');
-    const osTargets = getCheckedValues('q_osTargets');
-    const connectivity = getRadioValue('q_connectivity');
+    const category = configurator.getInternalCategory();
+    const config = configurator.getConfig();
     const model = document.getElementById('q_model').value;
     const cycle = model === 'recurring' ? document.getElementById('q_cycle').value : null;
     const ourCost = parseFloat(document.getElementById('q_cost').value);
@@ -424,27 +354,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const priority = document.getElementById('q_priority').value;
     const dueDate = document.getElementById('q_dueDate').value || null;
 
-    if (!name || isNaN(ourCost) || isNaN(customerPrice)) return;
-
-    const techStack = category === 'custom-development' ? {
-      frontend: getCheckedValues('q_stack_frontend'),
-      backend: getCheckedValues('q_stack_backend'),
-      database: getCheckedValues('q_stack_database'),
-      infraAddons: getCheckedValues('q_stack_infraAddons'),
-      integrations: getCheckedValues('q_stack_integrations')
-    } : null;
-
-    const config = { hostingProvider, hostingPlan, platform, dataBackend, deviceTypes, osTargets, connectivity, techStack };
+    if (!name || !category || isNaN(ourCost) || isNaN(customerPrice)) return;
 
     // Build the customer-facing "stack" chip list from whichever parts of the config are populated.
     const stack = [];
-    if (hostingProvider) stack.push(zpCatProvider(hostingProvider).label);
-    if (platform) stack.push(zpCatPlatform(platform).label);
-    if (dataBackend) stack.push(zpCatDataBackend(dataBackend).label);
-    if (techStack) Object.values(techStack).forEach(items => stack.push(...items));
+    const tool = config.toolId ? zpGetTool(config.toolId) : null;
+    if (tool) stack.push(tool.label);
+    if (config.techStack) Object.values(config.techStack).forEach(items => stack.push(...items));
+    if (config.automationBuilds) config.automationBuilds.forEach(w => stack.push(w.name));
 
-    const providerLabel = hostingProvider ? zpCatProvider(hostingProvider).label : (platform ? zpCatPlatform(platform).label : null);
-    const planLabel = hostingPlan ? zpCatPlan(hostingProvider, hostingPlan).label : null;
+    const planLabel = (config.toolId && config.planId) ? (zpGetToolPlan(config.toolId, config.planId) || {}).label : null;
 
     const svcId = 'svc-' + Date.now().toString().slice(-6);
     const today = ZP_TODAY.toISOString().slice(0, 10);
@@ -453,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const newService = {
       id: svcId, customerId: r.customerId, name, category,
-      provider: providerLabel, plan: planLabel,
+      provider: tool ? tool.label : null, plan: planLabel,
       stack: stack.length ? stack : ['To be scoped'],
       status: category === 'custom-development' ? 'in-development' : 'provisioning',
       deployedDate: null,
@@ -478,6 +397,17 @@ document.addEventListener('DOMContentLoaded', function () {
       createdDate: today, dueDate, completedDate: null, blockedReason: null,
       checklist: zpDefaultChecklist(category), notes: []
     });
+
+    // On-location / hybrid work also gets a scheduled site visit, so the "who's going and when"
+    // side of project management exists from the moment the service is created.
+    if ((config.deliveryMode === 'on-location' || config.deliveryMode === 'hybrid') && config.location && config.location.address) {
+      ZP.data.visits.push({
+        id: 'visit-' + Date.now().toString().slice(-6), serviceId: svcId, customerId: r.customerId, assigneeId,
+        title: name, scheduledDate: dueDate || today, scheduledTime: '09:00',
+        address: config.location.address, lat: config.location.lat, lng: config.location.lng,
+        checklist: zpDefaultChecklist(category), status: 'scheduled', notes: []
+      });
+    }
 
     if (createInvoice) {
       const amount = model === 'recurring' ? customerPrice : Math.round(customerPrice * 0.3 * 100) / 100;

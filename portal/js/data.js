@@ -50,8 +50,146 @@ const ZP_SEED = {
   teamUsers: [
     { id: 'team-1', name: 'Imran Qureshi', email: 'imran@zainpreneur.agency', password: 'team1234', role: 'Infrastructure Engineer', skills: ['Linux', 'Docker', 'Odoo', 'Hostinger'] },
     { id: 'team-2', name: 'Layla Haddad', email: 'layla@zainpreneur.agency', password: 'team1234', role: 'Full-Stack Developer', skills: ['React', 'FastAPI', 'PostgreSQL', 'Node.js'] },
-    { id: 'team-3', name: 'Marco Silva', email: 'marco@zainpreneur.agency', password: 'team1234', role: 'No-Code / App Specialist', skills: ['AppSheet', 'Glide', 'Google Workspace'] }
+    { id: 'team-3', name: 'Marco Silva', email: 'marco@zainpreneur.agency', password: 'team1234', role: 'No-Code / App Specialist', skills: ['AppSheet', 'Glide', 'Google Workspace'] },
+    { id: 'team-4', name: 'Priya Nadar', email: 'priya@zainpreneur.agency', password: 'team1234', role: 'Automation Engineer', skills: ['n8n', 'Make', 'Zapier', 'API integrations'] }
   ],
+
+  // Sellable catalogue items — hosting providers, off-the-shelf platforms, and automation
+  // tools — each with real plan tiers. Pricing/features here were gathered via web search
+  // against third-party pricing trackers on the date shown (vendor sites were unreachable
+  // from this environment) — treat as a strong starting point, not gospel; verify on the
+  // vendor's own site before quoting a customer, or use "Update Pricing" once confirmed.
+  catalogueTools: {
+    'hostinger-website': {
+      id: 'hostinger-website', label: 'Hostinger Website Builder', vendor: 'Hostinger',
+      website: 'https://www.hostinger.com/website-builder', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Fastest, cheapest way to get a small business online with an AI-assisted drag-and-drop builder.',
+      plans: [
+        { id: 'premium', label: 'Premium', price: 10.99, currency: 'USD', cycle: 'monthly', limits: { storage: '50GB', websites: '100' }, features: ['AI website builder', 'Free domain (1st year)', 'Free SSL', 'Unlimited bandwidth'], limitations: ['No custom code / dev tools'] },
+        { id: 'business', label: 'Business', price: 13.99, currency: 'USD', cycle: 'monthly', limits: { storage: '100GB', websites: '100' }, features: ['Everything in Premium', 'Online store (up to 100 products)', 'Abandoned cart recovery', 'Automated sales tax'], limitations: [] }
+      ]
+    },
+    'hubspot-cms': {
+      id: 'hubspot-cms', label: 'HubSpot CMS (Content Hub)', vendor: 'HubSpot',
+      website: 'https://www.hubspot.com/pricing/cms', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best when the website needs to be tightly wired into a CRM/marketing stack the customer already runs.',
+      plans: [
+        { id: 'free', label: 'Free', price: 0, currency: 'USD', cycle: 'free', limits: { pages: '25' }, features: ['Basic drag-and-drop editor', 'SSL'], limitations: ['HubSpot branding shown', 'Very limited pages'] },
+        { id: 'starter', label: 'Starter', price: 20, currency: 'USD', cycle: 'monthly-per-seat', limits: {}, features: ['No HubSpot branding', 'Multi-language content', 'Full CRM access'], limitations: ['No A/B testing or smart content'] },
+        { id: 'professional', label: 'Professional', price: 500, currency: 'USD', cycle: 'monthly', limits: { seats: '3 included, +$50/seat' }, features: ['A/B testing', 'SEO recommendations', 'Smart/personalized content', 'Custom reporting', 'HubDB'], limitations: [] },
+        { id: 'enterprise', label: 'Enterprise', price: 1500, currency: 'USD', cycle: 'monthly', limits: { seats: '5 included, +$75/seat' }, features: ['Adaptive testing', 'Memberships', 'Content partitioning', 'Additional root domains'], limitations: [] }
+      ]
+    },
+    'odoo': {
+      id: 'odoo', label: 'Odoo', vendor: 'Odoo',
+      website: 'https://www.odoo.com/pricing', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'One platform for website + ERP + CRM + inventory + accounting — pick one app free, pay per user as you add more.',
+      plans: [
+        { id: 'one-app-free', label: 'One App Free', price: 0, currency: 'USD', cycle: 'free', limits: { apps: '1 app', users: 'Unlimited' }, features: ['1 app of your choice', 'Unlimited users', 'Odoo Online hosting'], limitations: ['Only 1 app'] },
+        { id: 'standard', label: 'Standard', price: 31.10, currency: 'USD', cycle: 'per-user-monthly', limits: { apps: 'All apps' }, features: ['All Odoo apps', 'Standard support', 'Odoo Online or Odoo.sh hosting'], limitations: ['No Odoo Studio / external API'] },
+        { id: 'custom', label: 'Custom', price: 61.00, currency: 'USD', cycle: 'per-user-monthly', limits: { apps: 'All apps' }, features: ['Everything in Standard', 'Odoo Studio (custom fields/views)', 'Multi-company', 'External API access', 'On-premise hosting option'], limitations: [] }
+      ]
+    },
+    'wordpress-woocommerce': {
+      id: 'wordpress-woocommerce', label: 'WordPress / WooCommerce', vendor: 'Automattic / Open Source',
+      website: 'https://wordpress.org', lastVerified: '2026-09-05', dataSource: 'known (open source)',
+      specialty: 'The most flexible option when the customer wants full ownership and a huge plugin ecosystem — cost is hosting + build time, not a license.',
+      plans: [
+        { id: 'self-hosted', label: 'Self-hosted (open source)', price: 0, currency: 'USD', cycle: 'free', limits: {}, features: ['Free core software', 'Thousands of free/paid plugins & themes', 'Full code-level control'], limitations: ['You manage hosting, updates & security', 'No vendor support line — pair with a hosting/maintenance plan'] }
+      ]
+    },
+    'shopify': {
+      id: 'shopify', label: 'Shopify', vendor: 'Shopify',
+      website: 'https://www.shopify.com/pricing', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best for a dedicated online store where checkout, payments and shipping need to just work out of the box.',
+      plans: [
+        { id: 'basic', label: 'Basic', price: 39, currency: 'USD', cycle: 'monthly', limits: { staffAccounts: '2 staff accounts', transactionFee: '2% (non-Shopify Payments)' }, features: ['Unlimited products', 'Online store + basic reports'], limitations: [] },
+        { id: 'grow', label: 'Shopify (Grow)', price: 105, currency: 'USD', cycle: 'monthly', limits: { staffAccounts: '5 staff accounts', transactionFee: '1% (non-Shopify Payments)' }, features: ['Professional reports', 'Lower transaction fees'], limitations: [] },
+        { id: 'advanced', label: 'Advanced', price: 399, currency: 'USD', cycle: 'monthly', limits: { staffAccounts: '15 staff accounts', transactionFee: '0.6% (non-Shopify Payments)' }, features: ['Advanced report builder', 'Third-party calculated shipping rates'], limitations: [] }
+      ]
+    },
+    'appsheet': {
+      id: 'appsheet', label: 'AppSheet', vendor: 'Google',
+      website: 'https://about.appsheet.com/pricing/', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best for turning an existing Google Sheet / Airtable base into a real mobile app fast, with offline support built in.',
+      plans: [
+        { id: 'starter', label: 'Starter', price: 5, currency: 'USD', cycle: 'per-user-monthly', limits: {}, features: ['Basic apps', 'Core automations'], limitations: ['No advanced workflows'] },
+        { id: 'core', label: 'Core', price: 10, currency: 'USD', cycle: 'per-user-monthly', limits: {}, features: ['Advanced workflows', 'Offline sync', 'Custom branding'], limitations: [] },
+        { id: 'enterprise-plus', label: 'Enterprise Plus', price: 20, currency: 'USD', cycle: 'per-user-monthly', limits: {}, features: ['Enterprise security & governance', 'Dedicated support'], limitations: [] }
+      ]
+    },
+    'glide': {
+      id: 'glide', label: 'Glide', vendor: 'Glide',
+      website: 'https://www.glideapps.com/pricing', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best for a small, polished mobile app fronting a Google Sheet or Airtable base, with the cleanest builder UI of the no-code options.',
+      plans: [
+        { id: 'free', label: 'Free', price: 0, currency: 'USD', cycle: 'free', limits: { apps: '1 app', users: '10 users', rows: '500 rows' }, features: ['Prototyping & personal projects'], limitations: ['1,000 updates/mo cap'] },
+        { id: 'maker', label: 'Maker', price: 49, currency: 'USD', cycle: 'monthly', limits: { apps: '3 apps' }, features: ['Small portfolio of published apps'], limitations: ['500 updates/mo cap'] },
+        { id: 'business', label: 'Business', price: 199, currency: 'USD', cycle: 'monthly', limits: { users: '30 users, +$5/user' }, features: ['Airtable & Excel data sources', 'Glide API', 'Work email sign-in'], limitations: [] }
+      ]
+    },
+    'n8n': {
+      id: 'n8n', label: 'n8n', vendor: 'n8n',
+      website: 'https://n8n.io/pricing/', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best for teams who want full workflow control and are comfortable self-hosting, or want to pay per execution rather than per task.',
+      plans: [
+        { id: 'self-hosted', label: 'Self-hosted (Community)', price: 0, currency: 'USD', cycle: 'free', limits: {}, features: ['Unlimited workflows & executions (self-managed)', '400+ integrations', 'Full workflow control'], limitations: ['You manage hosting, updates & uptime'] },
+        { id: 'cloud-starter', label: 'Cloud Starter', price: 20, currency: 'EUR', cycle: 'monthly', limits: { executions: '2,500 executions/mo' }, features: ['Unlimited users, workflows & steps'], limitations: [] },
+        { id: 'cloud-pro', label: 'Cloud Pro', price: 50, currency: 'EUR', cycle: 'monthly', limits: { executions: '10,000 executions/mo' }, features: ['Unlimited users, workflows & steps'], limitations: [] }
+      ]
+    },
+    'make': {
+      id: 'make', label: 'Make', vendor: 'Make (Celonis)',
+      website: 'https://www.make.com/en/pricing', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best for complex, visual workflows with branching logic — a step up in power from Zapier at a lower per-operation cost.',
+      plans: [
+        { id: 'free', label: 'Free', price: 0, currency: 'USD', cycle: 'free', limits: { ops: '1,000 ops/mo', scenarios: '2 active scenarios' }, features: [], limitations: [] },
+        { id: 'core', label: 'Core', price: 12, currency: 'USD', cycle: 'monthly', limits: { ops: '10,000 ops/mo' }, features: ['Unlimited active scenarios'], limitations: [] },
+        { id: 'pro', label: 'Pro', price: 21, currency: 'USD', cycle: 'monthly', limits: { ops: '10,000 ops/mo' }, features: ['Custom variables', 'Full-text search'], limitations: [] },
+        { id: 'teams', label: 'Teams', price: 38, currency: 'USD', cycle: 'monthly', limits: { ops: '10,000 ops/mo' }, features: ['Team collaboration', 'Shared scenario templates', 'Role management'], limitations: [] }
+      ]
+    },
+    'zapier': {
+      id: 'zapier', label: 'Zapier', vendor: 'Zapier',
+      website: 'https://zapier.com/pricing', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best for simplicity and the largest app directory — the easiest to hand off to a non-technical customer, at a higher per-task cost.',
+      plans: [
+        { id: 'free', label: 'Free', price: 0, currency: 'USD', cycle: 'free', limits: { tasks: '100 tasks/mo', zaps: '5 Zaps' }, features: [], limitations: ['Single-step Zaps only'] },
+        { id: 'starter', label: 'Starter', price: 19.99, currency: 'USD', cycle: 'monthly', limits: { tasks: '750 tasks/mo' }, features: ['Multi-step Zaps', 'Unlimited Zaps'], limitations: [] },
+        { id: 'professional', label: 'Professional', price: 29.99, currency: 'USD', cycle: 'monthly', limits: { tasks: '750 tasks/mo' }, features: ['Premium apps', 'Custom logic (Paths)', 'Autoreplay'], limitations: [] },
+        { id: 'team', label: 'Team', price: 103.50, currency: 'USD', cycle: 'monthly', limits: { tasks: '2,000 tasks/mo' }, features: ['Shared workspaces', 'Unlimited users'], limitations: [] }
+      ]
+    },
+    'hostinger-vps': {
+      id: 'hostinger-vps', label: 'Hostinger VPS', vendor: 'Hostinger',
+      website: 'https://www.hostinger.com/vps-hosting', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best value dedicated VPS for a single platform deployment — NVMe storage and a 1 Gbps network on every tier.',
+      plans: [
+        { id: 'vps-kvm-1', label: 'VPS KVM 1', price: 11.99, currency: 'USD', cycle: 'monthly', limits: { vcpu: '1 vCPU', ram: '4GB RAM', storage: '50GB NVMe' }, features: [], limitations: [] },
+        { id: 'vps-kvm-2', label: 'VPS KVM 2', price: 14.99, currency: 'USD', cycle: 'monthly', limits: { vcpu: '2 vCPU', ram: '8GB RAM', storage: '100GB NVMe' }, features: [], limitations: [] },
+        { id: 'vps-kvm-4', label: 'VPS KVM 4', price: 28.99, currency: 'USD', cycle: 'monthly', limits: { vcpu: '4 vCPU', ram: '16GB RAM', storage: '200GB NVMe' }, features: [], limitations: [] },
+        { id: 'vps-kvm-8', label: 'VPS KVM 8', price: 49.99, currency: 'USD', cycle: 'monthly', limits: { vcpu: '8 vCPU', ram: '32GB RAM', storage: '400GB NVMe' }, features: [], limitations: [] }
+      ]
+    },
+    'digitalocean': {
+      id: 'digitalocean', label: 'DigitalOcean', vendor: 'DigitalOcean',
+      website: 'https://www.digitalocean.com/pricing/droplets', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best when the customer wants a well-documented, developer-friendly cloud with easy scaling beyond a single VPS.',
+      plans: [
+        { id: 'droplet-basic', label: 'Basic Droplet', price: 4, currency: 'USD', cycle: 'monthly', limits: { vcpu: '1 vCPU', ram: '512MB RAM', storage: '10GB SSD' }, features: ['Per-second billing'], limitations: [] },
+        { id: 'droplet-general', label: 'General Purpose Droplet', price: 63, currency: 'USD', cycle: 'monthly', limits: { vcpu: '4 vCPU (dedicated)', ram: '16GB RAM', storage: '200GB SSD' }, features: ['Guaranteed dedicated CPU'], limitations: [] }
+      ]
+    },
+    'aws': {
+      id: 'aws', label: 'AWS (EC2)', vendor: 'Amazon Web Services',
+      website: 'https://aws.amazon.com/ec2/pricing/on-demand/', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: "Best when the customer already runs on AWS or needs its specific managed services alongside the VM.",
+      plans: [
+        { id: 'ec2-t3-micro', label: 'EC2 t3.micro', price: 7.59, currency: 'USD', cycle: 'monthly', limits: { vcpu: '2 vCPU', ram: '1GB RAM' }, features: ['us-east-1 on-demand rate'], limitations: [] },
+        { id: 'ec2-t3-large', label: 'EC2 t3.large', price: 60.74, currency: 'USD', cycle: 'monthly', limits: { vcpu: '2 vCPU', ram: '8GB RAM' }, features: ['us-east-1 on-demand rate'], limitations: [] }
+      ]
+    }
+  },
 
   services: [
     {
@@ -178,6 +316,38 @@ const ZP_SEED = {
       accounts: [
         { id: 'acc-006', provider: 'Google Workspace', purpose: 'AppSheet + Sheets admin access', loginUrl: 'https://appsheet.com', username: 'marcus@bluewavelog.com', status: 'configured', sharedVia: 'Shared via Google Workspace admin invite on 2026-04-20', lastUpdated: '2026-05-01', notes: '' }
       ]
+    },
+    {
+      id: 'svc-009', customerId: 'cust-c', name: 'In-Clinic Network & POS Setup',
+      category: 'infrastructure', provider: null, plan: null,
+      stack: ['Network cabling', 'Wi-Fi access points', 'POS terminal configuration'],
+      status: 'active', deployedDate: '2026-07-15',
+      description: 'On-site installation and configuration of clinic Wi-Fi, network switches, and point-of-sale terminals across two treatment floors.',
+      billing: { model: 'one-time', ourCost: 600, customerPrice: 1800, currency: 'USD' },
+      milestones: null,
+      config: {
+        deliveryMode: 'on-location',
+        location: { address: '4420 E Camelback Rd, Phoenix, AZ 85018', lat: 33.5091, lng: -111.9827 },
+        deviceTypes: ['desktop'], osTargets: ['cross-platform'], connectivity: 'online'
+      },
+      accounts: []
+    },
+    {
+      id: 'svc-010', customerId: 'cust-d', name: 'Order Intake Automation',
+      category: 'automation', provider: 'n8n', plan: 'Cloud Starter',
+      stack: ['n8n', 'Gmail', 'Google Sheets', 'Slack'],
+      status: 'in-development', deployedDate: null,
+      description: 'Automated workflows connecting incoming wholesale order emails to a Google Sheets order tracker and Slack notifications for the fulfillment team.',
+      billing: { model: 'recurring', cycle: 'monthly', ourCost: 15.00, customerPrice: 75.00, currency: 'USD', nextRenewal: '2026-10-05' },
+      milestones: null,
+      config: {
+        deliveryMode: 'virtual', toolId: 'n8n', planId: 'cloud-starter',
+        automationBuilds: [
+          { name: 'New Order → Sheet + Slack', triggerApp: 'Gmail', actionApps: ['Google Sheets', 'Slack'], description: 'Parses incoming wholesale order emails, logs them to the tracker, and pings #fulfillment.' },
+          { name: 'Low Stock Alert', triggerApp: 'Google Sheets', actionApps: ['Slack', 'Gmail'], description: 'Checks the inventory sheet daily and alerts when any SKU drops below threshold.' }
+        ]
+      },
+      accounts: []
     }
   ],
 
@@ -201,15 +371,24 @@ const ZP_SEED = {
     { id: 'INV-2026-3004', customerId: 'cust-c', serviceId: 'svc-006', issueDate: '2026-08-01', dueDate: '2026-08-08', status: 'paid', paidDate: '2026-08-01', currency: 'USD', items: [{ desc: 'Standard Maintenance Retainer (Aug 2026)', qty: 1, unitPrice: 90.00 }] },
     { id: 'INV-2026-3005', customerId: 'cust-c', serviceId: 'svc-006', issueDate: '2026-09-01', dueDate: '2026-09-08', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Standard Maintenance Retainer (Sep 2026)', qty: 1, unitPrice: 90.00 }] },
 
-    { id: 'INV-2026-4001', customerId: 'cust-d', serviceId: 'svc-007', issueDate: '2026-08-25', dueDate: '2026-09-01', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Odoo Community Platform — Setup fee + first month (Sep 2026)', qty: 1, unitPrice: 89.00 }] }
+    { id: 'INV-2026-4001', customerId: 'cust-d', serviceId: 'svc-007', issueDate: '2026-08-25', dueDate: '2026-09-01', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Odoo Community Platform — Setup fee + first month (Sep 2026)', qty: 1, unitPrice: 89.00 }] },
+    { id: 'INV-2026-4002', customerId: 'cust-d', serviceId: 'svc-010', issueDate: '2026-09-05', dueDate: '2026-09-12', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Order Intake Automation — First month (n8n Cloud Starter)', qty: 1, unitPrice: 75.00 }] },
+
+    { id: 'INV-2026-3006', customerId: 'cust-c', serviceId: 'svc-009', issueDate: '2026-07-15', dueDate: '2026-07-22', status: 'paid', paidDate: '2026-07-15', currency: 'USD', items: [{ desc: 'In-Clinic Network & POS Setup — On-site installation', qty: 1, unitPrice: 1800.00 }] }
   ],
 
   requests: [
     {
       id: 'REQ-9001', customerId: 'cust-d', title: 'Custom Recipe Costing Dashboard',
-      category: 'custom-development',
+      category: 'custom-development', serviceCategoryId: 'custom-development',
       description: 'We need a dashboard that recalculates recipe costs as ingredient prices change, integrated with our Odoo inventory.',
       budgetRange: '$5,000 - $10,000', timeline: '2-3 months',
+      config: {
+        deliveryMode: 'virtual', location: null, toolId: null, planId: null,
+        deviceTypes: ['laptop', 'desktop'], osTargets: ['cross-platform'], connectivity: 'online',
+        techStack: { frontend: ['HTML', 'CSS', 'JavaScript'], backend: ['Python / FastAPI'], database: ['PostgreSQL'], infraAddons: [], integrations: [] },
+        automationBuilds: []
+      },
       status: 'submitted', submittedDate: '2026-09-02'
     }
   ],
@@ -327,6 +506,71 @@ const ZP_SEED = {
         { text: 'Deploy to production & handover', done: true }
       ],
       notes: []
+    },
+    {
+      id: 'task-007', serviceId: 'svc-009', customerId: 'cust-c',
+      title: 'Install In-Clinic Network & POS', assigneeId: 'team-1', status: 'done', priority: 'normal',
+      createdDate: '2026-07-01', dueDate: '2026-07-15', completedDate: '2026-07-15',
+      blockedReason: null,
+      checklist: [
+        { text: 'Provision hosting instance', done: true },
+        { text: 'Harden server (SSH, firewall, OS updates)', done: true },
+        { text: 'Install & configure target platform', done: true },
+        { text: 'Configure domain, DNS & SSL', done: true },
+        { text: 'Set up automated backups', done: true },
+        { text: 'Smoke-test the deployment', done: true },
+        { text: 'Hand off admin credentials & documentation to customer', done: true }
+      ],
+      notes: [{ date: '2026-07-15', author: 'Imran Qureshi', text: 'Both floors online, POS terminals tested with front desk staff on site.' }]
+    },
+    {
+      id: 'task-008', serviceId: 'svc-010', customerId: 'cust-d',
+      title: 'Build Order Intake Automation on n8n', assigneeId: 'team-4', status: 'in-progress', priority: 'normal',
+      createdDate: '2026-09-01', dueDate: '2026-09-20', completedDate: null,
+      blockedReason: null,
+      checklist: [
+        { text: 'Confirm plan tier & create/connect the workspace', done: true },
+        { text: 'Connect all required app accounts (OAuth / API keys)', done: true },
+        { text: 'Build each workflow listed in the configuration', done: false },
+        { text: 'Add error handling & failure notifications', done: false },
+        { text: 'Test each workflow end-to-end with real data', done: false },
+        { text: 'Document each workflow for the customer', done: false },
+        { text: 'Hand off admin access & training notes', done: false }
+      ],
+      notes: [{ date: '2026-09-03', author: 'Priya Nadar', text: 'Gmail and Google Sheets connected. Building the order-parsing logic next.' }]
+    }
+  ],
+
+  // Site visits — the physical-dispatch half of project management for on-location /
+  // hybrid services: who's going, when, where, and what they need to do while there.
+  visits: [
+    {
+      id: 'visit-001', serviceId: 'svc-009', customerId: 'cust-c', assigneeId: 'team-1',
+      title: 'Install network & POS at Horizon Dental (Floors 1 & 2)',
+      scheduledDate: '2026-07-15', scheduledTime: '09:00',
+      address: '4420 E Camelback Rd, Phoenix, AZ 85018', lat: 33.5091, lng: -111.9827,
+      checklist: [
+        { text: 'Run & terminate network cabling on both floors', done: true },
+        { text: 'Mount and configure Wi-Fi access points', done: true },
+        { text: 'Configure and test POS terminals at front desk', done: true },
+        { text: 'Walk staff through Wi-Fi guest network', done: true }
+      ],
+      status: 'completed',
+      notes: [{ date: '2026-07-15', author: 'Imran Qureshi', text: 'Both floors online, POS terminals tested with front desk staff.' }]
+    },
+    {
+      id: 'visit-002', serviceId: 'svc-008', customerId: 'cust-b', assigneeId: 'team-3',
+      title: 'On-site driver training for Check-In App',
+      scheduledDate: '2026-09-18', scheduledTime: '10:00',
+      address: '2200 W Fulton Market, Chicago, IL 60612', lat: 41.8859, lng: -87.6688,
+      checklist: [
+        { text: 'Bring printed quick-start guides', done: false },
+        { text: 'Walk each driver through the check-in flow', done: false },
+        { text: 'Confirm offline mode works in the loading dock (no signal)', done: false },
+        { text: 'Collect feedback for the next round of improvements', done: false }
+      ],
+      status: 'scheduled',
+      notes: []
     }
   ]
 };
@@ -426,6 +670,18 @@ function zpTaskProgress(task) {
   const total = task.checklist.length;
   const done = task.checklist.filter(c => c.done).length;
   return { done, total, pct: total ? Math.round((done / total) * 100) : 0 };
+}
+
+/* ---------------------------------- Site visits ---------------------------------- */
+
+function zpGetVisit(id) { return ZP.data.visits.find(v => v.id === id) || null; }
+function zpGetVisitsForAssignee(teamId) { return ZP.data.visits.filter(v => v.assigneeId === teamId); }
+function zpGetVisitsForService(serviceId) { return ZP.data.visits.filter(v => v.serviceId === serviceId); }
+function zpGetVisitsForCustomer(customerId) { return ZP.data.visits.filter(v => v.customerId === customerId); }
+function zpUpcomingVisitsForAssignee(teamId) {
+  return zpGetVisitsForAssignee(teamId)
+    .filter(v => v.status === 'scheduled')
+    .sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
 }
 
 function zpTeamStats(teamId) {
@@ -545,13 +801,15 @@ const ZP_CATEGORY_LABEL = {
   'infrastructure': 'Infrastructure & Hosting',
   'custom-development': 'Custom Development',
   'maintenance': 'Maintenance & Support',
-  'software-platform': 'Software Platform'
+  'software-platform': 'Software Platform',
+  'automation': 'Automation & Integrations'
 };
 const ZP_CATEGORY_ICON = {
   'infrastructure': '🖥️',
   'custom-development': '🛠️',
   'maintenance': '🔧',
-  'software-platform': '🧩'
+  'software-platform': '🧩',
+  'automation': '⚙️'
 };
 
 function zpCategoryLabel(cat) { return ZP_CATEGORY_LABEL[cat] || cat; }
@@ -566,6 +824,6 @@ const ZP_STATUS_LABEL = {
   pending: 'Pending', 'in-progress': 'In Progress',
   requested: 'Access Requested', shared: 'Shared Securely', configured: 'Configured',
   'rotate-requested': 'Please Rotate Password', 'not-needed': 'Not Required',
-  todo: 'To Do', blocked: 'Blocked', 'in-review': 'In Review'
+  todo: 'To Do', blocked: 'Blocked', 'in-review': 'In Review', scheduled: 'Scheduled'
 };
 function zpStatusLabel(s) { return ZP_STATUS_LABEL[s] || s; }

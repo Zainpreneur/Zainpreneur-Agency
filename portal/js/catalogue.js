@@ -1,60 +1,57 @@
 /* =========================================================================
    Zainpreneur Agency — Software & Deployment Catalogue
-   The single source of truth for "what can be built/deployed" — hosting
-   providers & plans, off-the-shelf platforms (with the device/OS/connectivity
-   combinations each one actually supports), and the layered tech stack
-   catalogue for custom development. Both the Agency quoting flow and the
-   Team execution portal read from this file so a task's configuration is
-   always built from the same option set.
+   Static taxonomy (categories, device/OS/connectivity vocab, tech-stack
+   layers, connector apps) lives here as constants. The actual sellable
+   TOOLS — Hostinger, HubSpot, Odoo, n8n, Make, Zapier, etc., each with
+   real plan tiers, pricing and features — are seeded into ZP.data.catalogueTools
+   (see data.js) so pricing edits made through "Update Pricing" persist to
+   localStorage like everything else, instead of living in this static file.
    ========================================================================= */
 
+/**
+ * The 7 categories customers/agency pick from when scoping a service. Each
+ * maps to an internal `category` bucket (used for badges/filters/checklists
+ * everywhere else in the portal) plus either a list of catalogue tool ids
+ * to choose from, a hosting picker, or a full custom tech-stack picker.
+ */
+const ZP_SERVICE_CATEGORIES = [
+  { id: 'website-development', label: 'Website Development', icon: '🌐', internalCategory: 'software-platform',
+    description: 'A public-facing website or storefront — on an off-the-shelf builder, or fully custom.',
+    tools: ['hostinger-website', 'hubspot-cms', 'odoo', 'wordpress-woocommerce'], allowCustom: true },
+  { id: 'business-platform', label: 'Business Platform / ERP', icon: '🧩', internalCategory: 'software-platform',
+    description: 'Off-the-shelf business software configured for the customer — ERP, CRM, or e-commerce backend.',
+    tools: ['odoo', 'wordpress-woocommerce', 'shopify'], allowCustom: false },
+  { id: 'mobile-app', label: 'Mobile App (No-Code)', icon: '📱', internalCategory: 'software-platform',
+    description: 'A mobile app built on a no-code platform instead of native development.',
+    tools: ['appsheet', 'glide'], allowCustom: false },
+  { id: 'automation', label: 'Automation & Integrations', icon: '⚙️', internalCategory: 'automation',
+    description: "Connecting the customer's existing tools together with automated workflows.",
+    tools: ['n8n', 'make', 'zapier'], allowCustom: false },
+  { id: 'infrastructure', label: 'Infrastructure & Hosting', icon: '🖥️', internalCategory: 'infrastructure',
+    description: 'Servers and VPS — the raw hosting a platform runs on.',
+    tools: ['hostinger-vps', 'digitalocean', 'aws'], allowCustom: false },
+  { id: 'custom-development', label: 'Custom Software Development', icon: '🛠️', internalCategory: 'custom-development',
+    description: "Bespoke software built from scratch to the customer's spec.",
+    tools: [], techStackPicker: true },
+  { id: 'maintenance', label: 'Maintenance & Support', icon: '🔧', internalCategory: 'maintenance',
+    description: 'Ongoing monitoring, patching and support for something already live.',
+    tools: [] }
+];
+
+/** Pseudo-tool id used only inside the Website Development picker — routes to custom-development. */
+const ZP_CUSTOM_WEBSITE_TOOL_ID = 'custom-website';
+
+function zpServiceCategoryDef(id) { return ZP_SERVICE_CATEGORIES.find(c => c.id === id) || null; }
+
+const ZP_DELIVERY_MODES = [
+  { id: 'virtual', label: 'Virtual / Online', icon: '💻', description: 'Delivered entirely remotely — no site visit needed.' },
+  { id: 'on-location', label: 'On-Location', icon: '📍', description: "Delivered at the customer's premises." },
+  { id: 'hybrid', label: 'Both (Hybrid)', icon: '🔀', description: 'A mix — most work remote, with one or more site visits.' }
+];
+function zpDeliveryModeLabel(id) { const d = ZP_DELIVERY_MODES.find(x => x.id === id); return d ? d.label : id; }
+
 const ZP_CATALOGUE = {
-
-  categories: [
-    { id: 'infrastructure', label: 'Infrastructure & Hosting', icon: '🖥️' },
-    { id: 'software-platform', label: 'Software Platform', icon: '🧩' },
-    { id: 'custom-development', label: 'Custom Development', icon: '🛠️' },
-    { id: 'maintenance', label: 'Maintenance & Support', icon: '🔧' }
-  ],
-
-  hostingProviders: [
-    { id: 'hostinger', label: 'Hostinger', plans: [
-      { id: 'vps-kvm-1', label: 'VPS KVM 1', specs: '1 vCPU · 4GB RAM · 50GB NVMe' },
-      { id: 'vps-kvm-2', label: 'VPS KVM 2', specs: '2 vCPU · 8GB RAM · 100GB NVMe' },
-      { id: 'vps-kvm-4', label: 'VPS KVM 4', specs: '4 vCPU · 16GB RAM · 200GB NVMe' },
-      { id: 'vps-kvm-8', label: 'VPS KVM 8', specs: '8 vCPU · 32GB RAM · 400GB NVMe' }
-    ]},
-    { id: 'digitalocean', label: 'DigitalOcean', plans: [
-      { id: 'droplet-basic', label: 'Basic Droplet', specs: '1 vCPU · 2GB RAM · 50GB SSD' },
-      { id: 'droplet-general', label: 'General Purpose Droplet', specs: '4 vCPU · 16GB RAM · 200GB SSD' }
-    ]},
-    { id: 'aws', label: 'AWS', plans: [
-      { id: 'ec2-t3-micro', label: 'EC2 t3.micro', specs: '2 vCPU · 1GB RAM' },
-      { id: 'ec2-t3-large', label: 'EC2 t3.large', specs: '2 vCPU · 8GB RAM' }
-    ]}
-  ],
-
-  // Off-the-shelf software platforms. deviceTypes/osTargets/modes describe
-  // what that platform can actually be configured to support — the picker
-  // uses these to only offer combinations that make sense.
-  platforms: [
-    { id: 'odoo', label: 'Odoo (ERP)', deployedOn: ['hostinger', 'digitalocean', 'aws'],
-      deviceTypes: ['laptop', 'desktop', 'mobile'], osTargets: ['cross-platform'], modes: ['online'] },
-    { id: 'wordpress-woocommerce', label: 'WordPress / WooCommerce', deployedOn: ['hostinger', 'digitalocean'],
-      deviceTypes: ['laptop', 'desktop', 'mobile'], osTargets: ['cross-platform'], modes: ['online'] },
-    { id: 'shopify', label: 'Shopify', deployedOn: [],
-      deviceTypes: ['laptop', 'desktop', 'mobile'], osTargets: ['cross-platform'], modes: ['online'] },
-    { id: 'appsheet', label: 'AppSheet', deployedOn: [], dataBackends: ['google-sheets', 'google-cloud-sql', 'airtable'],
-      deviceTypes: ['laptop', 'desktop', 'mobile', 'tablet'], osTargets: ['android', 'ios', 'cross-platform'], modes: ['online', 'offline', 'hybrid'] },
-    { id: 'glide', label: 'Glide', deployedOn: [], dataBackends: ['google-sheets', 'airtable'],
-      deviceTypes: ['mobile', 'tablet'], osTargets: ['android', 'ios', 'cross-platform'], modes: ['online', 'hybrid'] }
-  ],
-
-  dataBackends: [
-    { id: 'google-sheets', label: 'Google Sheets' },
-    { id: 'airtable', label: 'Airtable' },
-    { id: 'google-cloud-sql', label: 'Google Cloud SQL' },
-    { id: 'firebase-firestore', label: 'Firebase Firestore' }
+  hostingProviders: [ // kept for backward-compat lookups; VPS pricing itself now lives in catalogueTools
   ],
 
   deviceTypes: [
@@ -63,7 +60,6 @@ const ZP_CATALOGUE = {
     { id: 'mobile', label: 'Mobile' },
     { id: 'tablet', label: 'Tablet' }
   ],
-
   osTargets: [
     { id: 'android', label: 'Android' },
     { id: 'ios', label: 'iOS' },
@@ -72,22 +68,27 @@ const ZP_CATALOGUE = {
     { id: 'macos', label: 'macOS' },
     { id: 'linux', label: 'Linux' }
   ],
-
   connectivityModes: [
     { id: 'online', label: 'Online (cloud-connected)' },
     { id: 'offline', label: 'Offline-capable (local-first)' },
     { id: 'hybrid', label: 'Hybrid (offline capture, syncs online)' }
   ],
 
-  // Layered tech stack for custom development — each item is picked
-  // individually ("one by one") rather than as a single stack preset.
+  // Layered tech stack for custom development — each item picked individually.
   techStack: {
     frontend: ['HTML', 'CSS', 'JavaScript', 'TypeScript', 'React', 'Vue.js', 'Angular', 'Svelte', 'Flutter', 'React Native', 'Swift (iOS native)', 'Kotlin (Android native)'],
     backend: ['Node.js / Express', 'Python / Django', 'Python / FastAPI', 'PHP / Laravel', 'Ruby on Rails', 'Java / Spring Boot', '.NET / C#', 'Go'],
     database: ['PostgreSQL', 'MySQL', 'MongoDB', 'SQLite', 'Firebase Firestore', 'Microsoft SQL Server'],
     infraAddons: ['Redis', 'Elasticsearch', 'RabbitMQ', 'Docker', 'Kubernetes', 'Nginx', 'GraphQL', 'WebSockets'],
     integrations: ['Stripe (Payments)', 'Twilio (SMS)', 'SendGrid (Email)', 'Google Maps API', 'Auth0 (Auth)', 'Firebase Auth']
-  }
+  },
+
+  // Common apps offered when building an automation workflow's trigger/actions.
+  connectorApps: [
+    'Gmail', 'Google Sheets', 'Google Calendar', 'Google Drive', 'Slack', 'Microsoft Teams', 'Outlook',
+    'Shopify', 'WooCommerce', 'Stripe', 'QuickBooks', 'Odoo', 'HubSpot', 'Airtable', 'Notion', 'Trello',
+    'Twilio (SMS)', 'Mailchimp', 'Typeform', 'Webhook (custom)'
+  ]
 };
 
 const ZP_TECH_LAYER_LABEL = {
@@ -95,66 +96,112 @@ const ZP_TECH_LAYER_LABEL = {
   infraAddons: 'Infrastructure & Add-ons', integrations: 'Integrations'
 };
 
-/* ---------------------------------- Lookups ---------------------------------- */
+/* ---------------------------------- Tool / pricing lookups ---------------------------------- */
+/* Pricing data lives in ZP.data.catalogueTools (persisted) — see data.js. */
 
-function zpCatProvider(id) { return ZP_CATALOGUE.hostingProviders.find(p => p.id === id) || null; }
-function zpCatPlan(providerId, planId) {
-  const p = zpCatProvider(providerId);
-  return p ? (p.plans.find(pl => pl.id === planId) || null) : null;
+function zpGetTool(id) { return (ZP.data.catalogueTools || {})[id] || null; }
+function zpGetToolPlan(toolId, planId) {
+  const tool = zpGetTool(toolId);
+  return tool ? (tool.plans.find(p => p.id === planId) || null) : null;
 }
-function zpCatPlatform(id) { return ZP_CATALOGUE.platforms.find(p => p.id === id) || null; }
-function zpCatDataBackend(id) { return ZP_CATALOGUE.dataBackends.find(d => d.id === id) || null; }
-function zpCatDeviceLabel(id) { const d = ZP_CATALOGUE.deviceTypes.find(x => x.id === id); return d ? d.label : id; }
-function zpCatOsLabel(id) { const o = ZP_CATALOGUE.osTargets.find(x => x.id === id); return o ? o.label : id; }
-function zpCatConnectivityLabel(id) { const c = ZP_CATALOGUE.connectivityModes.find(x => x.id === id); return c ? c.label : id; }
+function zpToolsForCategoryDef(categoryDefId) {
+  const def = zpServiceCategoryDef(categoryDefId);
+  return def ? def.tools.map(zpGetTool).filter(Boolean) : [];
+}
+
+/** A tool's pricing is "stale" if it hasn't been verified in the last 90 days. */
+function zpIsToolStale(tool) {
+  if (!tool.lastVerified) return true;
+  return zpDaysBetween(new Date(tool.lastVerified), ZP_TODAY) > 90;
+}
+
+/** Persist an edited copy of a tool's plans (used by the "Update Pricing" form). Marks it manually verified today. */
+function zpUpdateToolPricing(toolId, plans) {
+  const tool = zpGetTool(toolId);
+  if (!tool) return;
+  tool.plans = plans;
+  tool.lastVerified = ZP_TODAY.toISOString().slice(0, 10);
+  tool.dataSource = 'manual (agency verified)';
+  zpPersist();
+}
+
+function zpFormatToolPrice(plan) {
+  if (plan.price === 0) return 'Free';
+  const amount = zpFormatCurrency(plan.price, plan.currency || 'USD');
+  const cycleLabel = { monthly: '/mo', 'monthly-per-seat': '/seat/mo', 'per-user-monthly': '/user/mo', annual: '/yr', free: '', 'one-time': ' one-time' }[plan.cycle] || '';
+  return amount + cycleLabel;
+}
+
+/** Renders one tool's plan tiers as a grid of read-only info cards (used in the catalogue reference page). */
+function zpRenderToolPlansReadonly(tool) {
+  return `<div class="plan-grid">
+    ${tool.plans.map(p => `
+      <div class="plan-card">
+        <div class="plan-card-head">
+          <strong>${p.label}</strong>
+          <span class="plan-price">${zpFormatToolPrice(p)}</span>
+        </div>
+        ${p.limits && Object.keys(p.limits).length ? `<div class="plan-limits">${Object.entries(p.limits).map(([k, v]) => `<span class="chip">${v}${isNaN(k) ? ' ' + k : ''}</span>`).join('')}</div>` : ''}
+        <ul class="plan-feature-list">${p.features.map(f => `<li>✓ ${f}</li>`).join('')}${(p.limitations || []).map(l => `<li class="limitation">✕ ${l}</li>`).join('')}</ul>
+      </div>
+    `).join('')}
+  </div>`;
+}
 
 /**
- * Renders a service/task's structured `config` object as grouped chip
- * sections (Platform, Device Types, OS Targets, Connectivity, and — for
- * custom development — one chip group per tech-stack layer). Returns ''
- * for services with no config (older/simple catalogue entries).
+ * Renders a service/task's structured `config` object as grouped sections:
+ * delivery mode + location, chosen tool/plan, device/OS/connectivity, and —
+ * for custom development — one chip group per tech-stack layer, plus any
+ * automation workflows to build. Returns '' for services with no config.
  */
 function zpRenderConfigDetail(config) {
   if (!config) return '';
-  const blocks = [];
+  let html = '';
 
-  if (config.hostingProvider) {
-    const provider = zpCatProvider(config.hostingProvider);
-    const plan = zpCatPlan(config.hostingProvider, config.hostingPlan);
-    blocks.push(kv('Hosting', `${provider ? provider.label : config.hostingProvider}${plan ? ' — ' + plan.label : ''}`, plan ? plan.specs : ''));
-  }
-  if (config.platform) {
-    const platform = zpCatPlatform(config.platform);
-    blocks.push(kv('Platform', platform ? platform.label : config.platform));
-  }
-  if (config.dataBackend) {
-    const backend = zpCatDataBackend(config.dataBackend);
-    blocks.push(kv('Data Backend', backend ? backend.label : config.dataBackend));
+  if (config.deliveryMode) {
+    const dm = ZP_DELIVERY_MODES.find(d => d.id === config.deliveryMode);
+    html += `<div class="kv-list" style="margin-top:0;">
+      <div class="kv"><div class="k">Delivery</div><div class="v">${dm ? dm.icon + ' ' + dm.label : config.deliveryMode}</div></div>
+      ${config.location ? `<div class="kv"><div class="k">Location</div><div class="v">${config.location.address || '—'}</div></div>` : ''}
+    </div>`;
+    if (config.location && config.location.lat && config.location.lng) {
+      html += zpRenderMapEmbed(config.location.lat, config.location.lng, config.location.address);
+    }
   }
 
-  let html = blocks.length ? `<div class="kv-list" style="margin-top:0;">${blocks.join('')}</div>` : '';
+  if (config.toolId) {
+    const tool = zpGetTool(config.toolId);
+    const plan = config.planId ? zpGetToolPlan(config.toolId, config.planId) : null;
+    const toolLabel = tool ? tool.label : (config.toolId === ZP_CUSTOM_WEBSITE_TOOL_ID ? 'Custom Website Development (no vendor — see tech stack below)' : config.toolId);
+    html += `<div class="kv-list">
+      <div class="kv"><div class="k">Tool</div><div class="v">${toolLabel}</div></div>
+      ${plan ? `<div class="kv"><div class="k">Plan</div><div class="v">${plan.label} — ${zpFormatToolPrice(plan)}</div></div>` : ''}
+    </div>`;
+  }
 
-  if (config.deviceTypes && config.deviceTypes.length) {
-    html += chipGroup('Device Types', config.deviceTypes.map(zpCatDeviceLabel));
-  }
-  if (config.osTargets && config.osTargets.length) {
-    html += chipGroup('OS Targets', config.osTargets.map(zpCatOsLabel));
-  }
-  if (config.connectivity) {
-    html += chipGroup('Connectivity', [zpCatConnectivityLabel(config.connectivity)]);
-  }
+  html += chipGroupIf('Device Types', (config.deviceTypes || []).map(zpCatDeviceLabel));
+  html += chipGroupIf('OS Targets', (config.osTargets || []).map(zpCatOsLabel));
+  html += chipGroupIf('Connectivity', config.connectivity ? [zpCatConnectivityLabel(config.connectivity)] : []);
+
   if (config.techStack) {
     Object.keys(ZP_TECH_LAYER_LABEL).forEach(layer => {
-      const items = config.techStack[layer];
-      if (items && items.length) html += chipGroup(ZP_TECH_LAYER_LABEL[layer], items);
+      html += chipGroupIf(ZP_TECH_LAYER_LABEL[layer], config.techStack[layer] || []);
     });
   }
+
+  if (config.automationBuilds && config.automationBuilds.length) {
+    html += `<div style="margin-top:14px;">
+      <div style="font-size:0.74rem;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted);margin-bottom:6px;">Workflows to Build</div>
+      <ul class="checklist">
+        ${config.automationBuilds.map(w => `<li><span><strong>${w.name}</strong> — ${w.triggerApp} → ${w.actionApps.join(', ')}${w.description ? `<br><span class="text-muted" style="font-size:0.8rem;">${w.description}</span>` : ''}</span></li>`).join('')}
+      </ul>
+    </div>`;
+  }
+
   return html;
 
-  function kv(k, v, sub) {
-    return `<div class="kv"><div class="k">${k}</div><div class="v">${v}</div>${sub ? `<div class="text-muted" style="font-size:0.72rem;">${sub}</div>` : ''}</div>`;
-  }
-  function chipGroup(label, items) {
+  function chipGroupIf(label, items) {
+    if (!items || !items.length) return '';
     return `<div style="margin-top:12px;">
       <div style="font-size:0.74rem;text-transform:uppercase;letter-spacing:0.03em;color:var(--muted);margin-bottom:6px;">${label}</div>
       <div>${items.map(t => `<span class="chip">${t}</span>`).join('')}</div>
@@ -162,43 +209,382 @@ function zpRenderConfigDetail(config) {
   }
 }
 
-/** Default checklist template for a newly created task, by category. */
+/** An embedded OpenStreetMap iframe centered on lat/lng — no API key required. */
+function zpRenderMapEmbed(lat, lng, label) {
+  const d = 0.006;
+  const bbox = `${lng - d},${lat - d},${lng + d},${lat + d}`;
+  return `<div class="map-embed">
+    <iframe title="${label || 'Site location'}" src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&marker=${lat},${lng}&layer=mapnik" loading="lazy"></iframe>
+    <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=16/${lat}/${lng}" target="_blank" rel="noopener" class="map-embed-link">Open in OpenStreetMap ↗</a>
+  </div>`;
+}
+
+/* ---------------------------------- Lookups (device/OS/connectivity labels) ---------------------------------- */
+
+function zpCatDeviceLabel(id) { const d = ZP_CATALOGUE.deviceTypes.find(x => x.id === id); return d ? d.label : id; }
+function zpCatOsLabel(id) { const o = ZP_CATALOGUE.osTargets.find(x => x.id === id); return o ? o.label : id; }
+function zpCatConnectivityLabel(id) { const c = ZP_CATALOGUE.connectivityModes.find(x => x.id === id); return c ? c.label : id; }
+
+/** Default checklist template for a newly created task, by internal category. */
 function zpDefaultChecklist(category) {
   const templates = {
     'infrastructure': [
-      'Provision hosting instance',
-      'Harden server (SSH, firewall, OS updates)',
-      'Install & configure target platform',
-      'Configure domain, DNS & SSL',
-      'Set up automated backups',
-      'Smoke-test the deployment',
+      'Provision hosting instance', 'Harden server (SSH, firewall, OS updates)',
+      'Install & configure target platform', 'Configure domain, DNS & SSL',
+      'Set up automated backups', 'Smoke-test the deployment',
       'Hand off admin credentials & documentation to customer'
     ],
     'software-platform': [
-      'Create/confirm platform account',
-      'Connect data backend',
+      'Create/confirm platform account', 'Connect data backend',
       'Configure views/screens for the requested device types',
-      'Set access roles & permissions',
-      'User acceptance testing with customer',
-      'Publish/deploy to production',
+      'Set access roles & permissions', 'User acceptance testing with customer',
+      'Publish/deploy to production', 'Hand off admin access & training notes'
+    ],
+    'automation': [
+      'Confirm plan tier & create/connect the workspace',
+      'Connect all required app accounts (OAuth / API keys)',
+      'Build each workflow listed in the configuration',
+      'Add error handling & failure notifications',
+      'Test each workflow end-to-end with real data',
+      'Document each workflow for the customer',
       'Hand off admin access & training notes'
     ],
     'custom-development': [
-      'Repository & environment setup',
-      'Implement backend / API',
-      'Implement frontend / UI',
-      'Connect database',
-      'Write tests',
-      'Deploy to staging for UAT',
-      'Address UAT feedback',
-      'Deploy to production & handover'
+      'Repository & environment setup', 'Implement backend / API',
+      'Implement frontend / UI', 'Connect database', 'Write tests',
+      'Deploy to staging for UAT', 'Address UAT feedback', 'Deploy to production & handover'
     ],
     'maintenance': [
-      'Confirm monitoring coverage',
-      'Verify backup schedule',
-      'Apply pending security patches',
-      'Send first monthly report'
+      'Confirm monitoring coverage', 'Verify backup schedule',
+      'Apply pending security patches', 'Send first monthly report'
     ]
   };
   return (templates[category] || ['Scope task', 'Complete work', 'Hand off to customer']).map(text => ({ text, done: false }));
+}
+
+/* =========================================================================
+   Shared configurator component
+   Mounts the full category -> tool -> plan -> device/OS/connectivity ->
+   delivery/location -> tech-stack/automation picker into a container, used
+   identically by the customer "Request a Service" form and the agency
+   quote form. Everything is scoped under the container (no global ids),
+   so it's safe even if a page mounts more than one instance.
+   ========================================================================= */
+
+function zpMountConfigurator(container, opts) {
+  opts = opts || {};
+  const state = { serviceCategoryId: null, toolId: null, planId: null, deliveryMode: 'virtual' };
+
+  container.innerHTML = `
+    <div class="category-picker" data-role="categoryPicker">
+      ${ZP_SERVICE_CATEGORIES.map(def => `
+        <button type="button" class="category-option" data-cat="${def.id}">
+          <span class="icon">${def.icon}</span>
+          <span class="title">${def.label}</span>
+          <span class="desc">${def.description}</span>
+        </button>`).join('')}
+    </div>
+
+    <div data-role="dynamicFields" style="display:none;">
+      <div data-role="toolSection" style="display:none;margin-top:16px;">
+        <h3 style="font-size:0.9rem;margin:0 0 8px;">Choose a tool</h3>
+        <div data-role="toolList"></div>
+        <div data-role="planSection" style="display:none;margin-top:10px;">
+          <h3 style="font-size:0.9rem;margin:0 0 8px;">Choose a plan</h3>
+          <div class="plan-grid" data-role="planList"></div>
+        </div>
+      </div>
+
+      <div data-role="techStackSection" style="display:none;margin-top:16px;">
+        <h3 style="font-size:0.9rem;margin:0 0 10px;">Tech Stack</h3>
+        <div class="stack-layer"><div class="layer-label">Frontend</div><div class="check-grid" data-role="stack-frontend"></div></div>
+        <div class="stack-layer"><div class="layer-label">Backend</div><div class="check-grid" data-role="stack-backend"></div></div>
+        <div class="stack-layer"><div class="layer-label">Database</div><div class="check-grid" data-role="stack-database"></div></div>
+        <div class="stack-layer"><div class="layer-label">Infrastructure &amp; Add-ons</div><div class="check-grid" data-role="stack-infraAddons"></div></div>
+        <div class="stack-layer"><div class="layer-label">Integrations</div><div class="check-grid" data-role="stack-integrations"></div></div>
+      </div>
+
+      <div data-role="automationSection" style="display:none;margin-top:16px;">
+        <h3 style="font-size:0.9rem;margin:0 0 8px;">Workflows to Build</h3>
+        <div data-role="workflowList"></div>
+        <button type="button" class="btn btn-secondary btn-sm" data-role="addWorkflow">+ Add Workflow</button>
+      </div>
+
+      <div data-role="deviceOsSection" style="margin-top:16px;">
+        <div class="form-grid">
+          <div class="field"><label>Device types</label><div class="check-grid" data-role="deviceTypes"></div></div>
+          <div class="field"><label>OS targets</label><div class="check-grid" data-role="osTargets"></div></div>
+        </div>
+        <div class="field"><label>Connectivity</label><div class="check-grid" data-role="connectivity"></div></div>
+      </div>
+
+      <h3 style="font-size:0.9rem;margin:16px 0 8px;border-top:1px dashed var(--border);padding-top:16px;">Delivery</h3>
+      <div class="category-picker" data-role="deliveryPicker" style="grid-template-columns:repeat(3,1fr);">
+        ${ZP_DELIVERY_MODES.map(d => `<button type="button" class="category-option" data-mode="${d.id}"><span class="icon">${d.icon}</span><span class="title">${d.label}</span><span class="desc">${d.description}</span></button>`).join('')}
+      </div>
+      <div data-role="locationSection" style="display:none;margin-top:12px;">
+        <div class="field"><label>Site address</label><input type="text" data-role="address" placeholder="Street, city, state"></div>
+        <div class="form-grid">
+          <div class="field"><label>Latitude</label><input type="number" step="0.0001" data-role="lat" placeholder="e.g. 33.5091"></div>
+          <div class="field"><label>Longitude</label><input type="number" step="0.0001" data-role="lng" placeholder="e.g. -111.9827"></div>
+        </div>
+        <p class="text-muted" style="font-size:0.76rem;">Tip: right-click the spot on <a href="https://www.openstreetmap.org" target="_blank" rel="noopener">OpenStreetMap</a> and copy the coordinates shown.</p>
+        <div data-role="mapPreview"></div>
+      </div>
+    </div>
+  `;
+
+  const $ = sel => container.querySelector(`[data-role="${sel}"]`);
+  const categoryPicker = $('categoryPicker');
+  const dynamicFields = $('dynamicFields');
+  const toolSection = $('toolSection');
+  const toolList = $('toolList');
+  const planSection = $('planSection');
+  const planList = $('planList');
+  const techStackSection = $('techStackSection');
+  const automationSection = $('automationSection');
+  const workflowList = $('workflowList');
+  const deliveryPicker = $('deliveryPicker');
+  const locationSection = $('locationSection');
+  const mapPreview = $('mapPreview');
+
+  function renderCheckGrid(role, items, type, groupName) {
+    const el = $(role);
+    el.innerHTML = items.map((item, i) => {
+      const value = typeof item === 'string' ? item : item.id;
+      const label = typeof item === 'string' ? item : item.label;
+      const id = groupName + '_' + i + '_' + Math.random().toString(36).slice(2, 6);
+      return `<div class="check-pill"><input type="${type}" name="${groupName}" id="${id}" value="${value}"><label for="${id}">${label}</label></div>`;
+    }).join('');
+  }
+  function readChecked(groupName) {
+    return Array.from(container.querySelectorAll(`input[name="${groupName}"]:checked`)).map(el => el.value);
+  }
+  function readRadio(groupName) {
+    const el = container.querySelector(`input[name="${groupName}"]:checked`);
+    return el ? el.value : null;
+  }
+  function clearGroup(groupName) {
+    container.querySelectorAll(`input[name="${groupName}"]`).forEach(el => { el.checked = false; });
+  }
+
+  const deviceGroup = 'cfg_device_' + Math.random().toString(36).slice(2, 6);
+  const osGroup = 'cfg_os_' + Math.random().toString(36).slice(2, 6);
+  const connGroup = 'cfg_conn_' + Math.random().toString(36).slice(2, 6);
+  renderCheckGrid('deviceTypes', ZP_CATALOGUE.deviceTypes, 'checkbox', deviceGroup);
+  renderCheckGrid('osTargets', ZP_CATALOGUE.osTargets, 'checkbox', osGroup);
+  renderCheckGrid('connectivity', ZP_CATALOGUE.connectivityModes, 'radio', connGroup);
+  const stackGroups = {};
+  Object.keys(ZP_TECH_LAYER_LABEL).forEach(layer => {
+    stackGroups[layer] = 'cfg_stack_' + layer + '_' + Math.random().toString(36).slice(2, 6);
+    renderCheckGrid('stack-' + layer, ZP_CATALOGUE.techStack[layer], 'checkbox', stackGroups[layer]);
+  });
+
+  function currentDef() { return zpServiceCategoryDef(state.serviceCategoryId); }
+  function isCustomWebsite() { return state.toolId === ZP_CUSTOM_WEBSITE_TOOL_ID; }
+
+  function refreshSections() {
+    const def = currentDef();
+    if (!def) { dynamicFields.style.display = 'none'; return; }
+    dynamicFields.style.display = '';
+    toolSection.style.display = def.tools.length ? '' : 'none';
+    planSection.style.display = (state.toolId && !isCustomWebsite()) ? '' : 'none';
+    techStackSection.style.display = (def.techStackPicker || isCustomWebsite()) ? '' : 'none';
+    automationSection.style.display = def.id === 'automation' ? '' : 'none';
+  }
+
+  function renderToolList() {
+    const def = currentDef();
+    const tools = def.tools.map(zpGetTool).filter(Boolean);
+    let html = tools.map(t => `<div class="tool-card ${state.toolId === t.id ? 'selected' : ''}" data-tool="${t.id}">
+      <div class="tool-head"><strong>${t.label}</strong><span class="text-muted" style="font-size:0.76rem;">${t.vendor}</span></div>
+      <div class="tool-specialty">${t.specialty}</div>
+    </div>`).join('');
+    if (def.allowCustom) {
+      html += `<div class="tool-card ${isCustomWebsite() ? 'selected' : ''}" data-tool="${ZP_CUSTOM_WEBSITE_TOOL_ID}">
+        <div class="tool-head"><strong>Custom Website Development</strong><span class="text-muted" style="font-size:0.76rem;">Built from scratch</span></div>
+        <div class="tool-specialty">No off-the-shelf builder — a bespoke site built with a hand-picked tech stack.</div>
+      </div>`;
+    }
+    toolList.innerHTML = html;
+  }
+
+  function renderPlanList() {
+    if (!state.toolId || isCustomWebsite()) { planList.innerHTML = ''; return; }
+    const tool = zpGetTool(state.toolId);
+    if (!tool) { planList.innerHTML = ''; return; }
+    planList.innerHTML = tool.plans.map(p => `<button type="button" class="plan-pick-card ${state.planId === p.id ? 'selected' : ''}" data-plan="${p.id}">
+      <div class="plan-card-head"><strong>${p.label}</strong><span class="plan-price">${zpFormatToolPrice(p)}</span></div>
+      <ul class="plan-feature-list">${p.features.slice(0, 3).map(f => `<li>✓ ${f}</li>`).join('')}</ul>
+    </button>`).join('');
+  }
+
+  categoryPicker.addEventListener('click', e => {
+    const btn = e.target.closest('.category-option');
+    if (!btn) return;
+    state.serviceCategoryId = btn.getAttribute('data-cat');
+    state.toolId = null; state.planId = null;
+    categoryPicker.querySelectorAll('.category-option').forEach(el => el.classList.remove('selected'));
+    btn.classList.add('selected');
+    renderToolList();
+    renderPlanList();
+    refreshSections();
+    if (opts.onChange) opts.onChange();
+  });
+
+  toolList.addEventListener('click', e => {
+    const card = e.target.closest('[data-tool]');
+    if (!card) return;
+    state.toolId = card.getAttribute('data-tool');
+    state.planId = null;
+    renderToolList();
+    renderPlanList();
+    refreshSections();
+    if (opts.onChange) opts.onChange();
+  });
+
+  planList.addEventListener('click', e => {
+    const card = e.target.closest('[data-plan]');
+    if (!card) return;
+    state.planId = card.getAttribute('data-plan');
+    renderPlanList();
+    if (opts.onChange) opts.onChange();
+  });
+
+  /* --- Delivery mode + location --- */
+  function selectDeliveryMode(mode) {
+    state.deliveryMode = mode;
+    deliveryPicker.querySelectorAll('.category-option').forEach(el => el.classList.toggle('selected', el.getAttribute('data-mode') === mode));
+    locationSection.style.display = mode !== 'virtual' ? '' : 'none';
+    updateMapPreview();
+  }
+  deliveryPicker.addEventListener('click', e => {
+    const btn = e.target.closest('.category-option');
+    if (!btn) return;
+    selectDeliveryMode(btn.getAttribute('data-mode'));
+  });
+  selectDeliveryMode('virtual');
+
+  function updateMapPreview() {
+    const lat = parseFloat($('lat').value), lng = parseFloat($('lng').value);
+    mapPreview.innerHTML = (!isNaN(lat) && !isNaN(lng)) ? zpRenderMapEmbed(lat, lng, $('address').value) : '';
+  }
+  $('lat').addEventListener('change', updateMapPreview);
+  $('lng').addEventListener('change', updateMapPreview);
+
+  /* --- Automation workflow builder --- */
+  let workflows = [];
+  function renderWorkflows() {
+    workflowList.innerHTML = workflows.map((w, i) => `<div class="workflow-row" data-wf="${i}">
+      <div class="wf-grid">
+        <div class="field" style="margin-bottom:0;"><label>Workflow name</label><input type="text" class="wf-name" value="${w.name || ''}" placeholder="e.g. New Order → Sheet + Slack"></div>
+        <div class="field" style="margin-bottom:0;"><label>Trigger app</label><select class="wf-trigger">${ZP_CATALOGUE.connectorApps.map(a => `<option ${w.triggerApp === a ? 'selected' : ''}>${a}</option>`).join('')}</select></div>
+      </div>
+      <div class="field" style="margin-bottom:6px;"><label>Action app(s) — hold Ctrl/Cmd to select more than one</label>
+        <select class="wf-actions" multiple size="4">${ZP_CATALOGUE.connectorApps.map(a => `<option ${(w.actionApps || []).includes(a) ? 'selected' : ''}>${a}</option>`).join('')}</select>
+      </div>
+      <div class="field" style="margin-bottom:6px;"><label>Description</label><input type="text" class="wf-desc" value="${w.description || ''}" placeholder="What this workflow does"></div>
+      <button type="button" class="wf-remove" data-remove-wf="${i}">✕ Remove workflow</button>
+    </div>`).join('') || `<p class="text-muted" style="font-size:0.84rem;">No workflows added yet.</p>`;
+  }
+  $('addWorkflow').addEventListener('click', () => { workflows.push({ name: '', triggerApp: ZP_CATALOGUE.connectorApps[0], actionApps: [], description: '' }); renderWorkflows(); });
+  workflowList.addEventListener('click', e => {
+    const btn = e.target.closest('[data-remove-wf]');
+    if (btn) { workflows.splice(parseInt(btn.getAttribute('data-remove-wf'), 10), 1); syncWorkflowsFromDom(); renderWorkflows(); }
+  });
+  function syncWorkflowsFromDom() {
+    workflows = Array.from(workflowList.querySelectorAll('[data-wf]')).map(row => ({
+      name: row.querySelector('.wf-name').value.trim(),
+      triggerApp: row.querySelector('.wf-trigger').value,
+      actionApps: Array.from(row.querySelector('.wf-actions').selectedOptions).map(o => o.value),
+      description: row.querySelector('.wf-desc').value.trim()
+    }));
+  }
+  renderWorkflows();
+
+  /* ---------------------------------- Public API ---------------------------------- */
+
+  function reset() {
+    state.serviceCategoryId = null; state.toolId = null; state.planId = null;
+    categoryPicker.querySelectorAll('.category-option').forEach(el => el.classList.remove('selected'));
+    dynamicFields.style.display = 'none';
+    clearGroup(deviceGroup); clearGroup(osGroup); clearGroup(connGroup);
+    Object.values(stackGroups).forEach(clearGroup);
+    workflows = []; renderWorkflows();
+    $('address').value = ''; $('lat').value = ''; $('lng').value = '';
+    selectDeliveryMode('virtual');
+  }
+
+  /** Preload the picker from a saved config + serviceCategoryId (e.g. reviewing a customer request). */
+  function setState(serviceCategoryId, config) {
+    reset();
+    if (!serviceCategoryId) return;
+    state.serviceCategoryId = serviceCategoryId;
+    categoryPicker.querySelectorAll('.category-option').forEach(el => el.classList.toggle('selected', el.getAttribute('data-cat') === serviceCategoryId));
+    renderToolList();
+    config = config || {};
+    if (config.toolId) { state.toolId = config.toolId; renderToolList(); renderPlanList(); }
+    if (config.planId) { state.planId = config.planId; renderPlanList(); }
+    refreshSections();
+    (config.deviceTypes || []).forEach(v => { const el = container.querySelector(`input[name="${deviceGroup}"][value="${v}"]`); if (el) el.checked = true; });
+    (config.osTargets || []).forEach(v => { const el = container.querySelector(`input[name="${osGroup}"][value="${v}"]`); if (el) el.checked = true; });
+    if (config.connectivity) { const el = container.querySelector(`input[name="${connGroup}"][value="${config.connectivity}"]`); if (el) el.checked = true; }
+    if (config.techStack) {
+      Object.keys(stackGroups).forEach(layer => {
+        (config.techStack[layer] || []).forEach(v => { const el = container.querySelector(`input[name="${stackGroups[layer]}"][value="${v}"]`); if (el) el.checked = true; });
+      });
+    }
+    if (config.automationBuilds && config.automationBuilds.length) { workflows = config.automationBuilds.map(w => ({ ...w })); renderWorkflows(); }
+    selectDeliveryMode(config.deliveryMode || 'virtual');
+    if (config.location) {
+      $('address').value = config.location.address || '';
+      $('lat').value = config.location.lat != null ? config.location.lat : '';
+      $('lng').value = config.location.lng != null ? config.location.lng : '';
+      updateMapPreview();
+    }
+  }
+
+  function getInternalCategory() {
+    const def = currentDef();
+    if (!def) return null;
+    return isCustomWebsite() ? 'custom-development' : def.internalCategory;
+  }
+
+  function getConfig() {
+    const def = currentDef();
+    syncWorkflowsFromDom();
+    const useTechStack = def && (def.techStackPicker || isCustomWebsite());
+    return {
+      deliveryMode: state.deliveryMode,
+      location: state.deliveryMode !== 'virtual' ? {
+        address: $('address').value.trim(),
+        lat: parseFloat($('lat').value) || null,
+        lng: parseFloat($('lng').value) || null
+      } : null,
+      // toolId is kept even for the pseudo "custom-website" marker so a saved config still
+      // remembers the customer's intent when it's redisplayed (e.g. the agency reopening a request).
+      toolId: state.toolId || null,
+      planId: (state.toolId && !isCustomWebsite()) ? state.planId : null,
+      deviceTypes: readChecked(deviceGroup),
+      osTargets: readChecked(osGroup),
+      connectivity: readRadio(connGroup),
+      techStack: useTechStack ? {
+        frontend: readChecked(stackGroups.frontend), backend: readChecked(stackGroups.backend),
+        database: readChecked(stackGroups.database), infraAddons: readChecked(stackGroups.infraAddons),
+        integrations: readChecked(stackGroups.integrations)
+      } : null,
+      automationBuilds: def && def.id === 'automation' ? workflows.filter(w => w.name) : []
+    };
+  }
+
+  function getSuggestedPrice() {
+    if (!state.toolId || !state.planId) return null;
+    const plan = zpGetToolPlan(state.toolId, state.planId);
+    return plan ? plan.price : null;
+  }
+
+  return {
+    getServiceCategoryId: () => state.serviceCategoryId,
+    getInternalCategory, getConfig, getSuggestedPrice, reset, setState
+  };
 }

@@ -214,6 +214,103 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function closeTask() { modal.classList.remove('open'); }
 
+  /* ---------------------------------- Site visits ---------------------------------- */
+
+  const visitModal = document.getElementById('visitModal');
+  const visitModalTitle = document.getElementById('visitModalTitle');
+  const visitModalBody = document.getElementById('visitModalBody');
+  document.getElementById('visitModalClose').addEventListener('click', () => visitModal.classList.remove('open'));
+  visitModal.addEventListener('click', e => { if (e.target === visitModal) visitModal.classList.remove('open'); });
+
+  let activeVisitId = null;
+
+  function renderVisits() {
+    const upcoming = zpUpcomingVisitsForAssignee(member.id);
+    const panel = document.getElementById('visitsPanel');
+    if (upcoming.length === 0) { panel.style.display = 'none'; return; }
+    panel.style.display = '';
+    document.getElementById('visitsBody').innerHTML = upcoming.map(v => {
+      const d = new Date(v.scheduledDate);
+      const cust = zpGetCustomer(v.customerId);
+      return `<button class="visit-card" data-visit="${v.id}">
+        <div class="vc-date"><div class="day">${d.getDate()}</div><div class="mon">${d.toLocaleDateString('en-US', { month: 'short' })}</div></div>
+        <div class="vc-main">
+          <div class="vc-title">${v.title}</div>
+          <div class="vc-meta">${cust ? cust.company : '—'} · ${v.address} · ${v.scheduledTime || ''}</div>
+        </div>
+        ${zpBadge(v.status)}
+      </button>`;
+    }).join('');
+    document.querySelectorAll('[data-visit]').forEach(el => {
+      el.addEventListener('click', () => openVisit(el.getAttribute('data-visit')));
+    });
+  }
+
+  function openVisit(visitId) {
+    const v = zpGetVisit(visitId);
+    if (!v) return;
+    activeVisitId = visitId;
+    const cust = zpGetCustomer(v.customerId);
+    const svc = zpGetService(v.serviceId);
+
+    visitModalTitle.textContent = v.title;
+    visitModalBody.innerHTML = `
+      <div class="flex-between" style="margin-bottom:10px;">
+        <div class="text-muted" style="font-size:0.82rem;">${cust ? cust.company : '—'}${svc ? ' · ' + svc.name : ''}</div>
+        ${zpBadge(v.status)}
+      </div>
+      <div class="kv-list" style="margin-top:0;">
+        <div class="kv"><div class="k">Date</div><div class="v">${zpFormatDate(v.scheduledDate)}${v.scheduledTime ? ' · ' + v.scheduledTime : ''}</div></div>
+        <div class="kv"><div class="k">Address</div><div class="v">${v.address}</div></div>
+      </div>
+      ${zpRenderMapEmbed(v.lat, v.lng, v.address)}
+      <h3 style="margin:18px 0 8px;font-size:0.95rem;">On-Site Checklist</h3>
+      <ul class="checklist" id="visitChecklist">
+        ${v.checklist.map((c, i) => `<li class="${c.done ? 'done' : ''}"><input type="checkbox" data-vidx="${i}" ${c.done ? 'checked' : ''}><span>${c.text}</span></li>`).join('')}
+      </ul>
+      <h3 style="margin:18px 0 8px;font-size:0.95rem;">Notes</h3>
+      <div class="note-list">
+        ${v.notes.map(n => `<div class="note-item"><div class="n-meta">${n.author} · ${zpFormatDate(n.date)}</div>${n.text}</div>`).join('') || '<p class="text-muted" style="font-size:0.85rem;">No notes yet.</p>'}
+      </div>
+      <div class="field"><textarea id="newVisitNoteText" placeholder="Add a note from the visit…" style="min-height:60px;"></textarea></div>
+      <button type="button" class="btn btn-secondary btn-sm" id="addVisitNoteBtn">Add Note</button>
+      <div class="status-actions">
+        ${v.status === 'scheduled' ? '<button type="button" class="btn btn-primary btn-sm" id="markVisitDoneBtn">Mark Visit Completed</button>' : ''}
+      </div>
+    `;
+    visitModal.classList.add('open');
+  }
+
+  visitModalBody.addEventListener('change', e => {
+    if (e.target.matches('#visitChecklist input[type="checkbox"]')) {
+      const v = zpGetVisit(activeVisitId);
+      v.checklist[parseInt(e.target.getAttribute('data-vidx'), 10)].done = e.target.checked;
+      zpPersist();
+      openVisit(activeVisitId);
+    }
+  });
+
+  visitModalBody.addEventListener('click', e => {
+    if (e.target.closest('#addVisitNoteBtn')) {
+      const text = document.getElementById('newVisitNoteText').value.trim();
+      if (!text) return;
+      const v = zpGetVisit(activeVisitId);
+      v.notes.push({ date: ZP_TODAY.toISOString().slice(0, 10), author: member.name, text });
+      zpPersist();
+      openVisit(activeVisitId);
+      return;
+    }
+    if (e.target.closest('#markVisitDoneBtn')) {
+      const v = zpGetVisit(activeVisitId);
+      v.status = 'completed';
+      v.checklist.forEach(c => c.done = true);
+      zpPersist();
+      visitModal.classList.remove('open');
+      renderVisits();
+    }
+  });
+
   renderStats();
   renderBoard();
+  renderVisits();
 });

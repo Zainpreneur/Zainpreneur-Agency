@@ -59,7 +59,7 @@ function zpInitShell(opts) {
 function zpBadge(status, extraClass) {
   const map = {
     active: 'success', paid: 'success', completed: 'success', approved: 'success', converted: 'success', configured: 'success',
-    provisioning: 'info', submitted: 'info', quoted: 'info', 'in-progress': 'info', shared: 'info',
+    provisioning: 'info', submitted: 'info', quoted: 'info', 'in-progress': 'info', shared: 'info', scheduled: 'info',
     'in-development': 'warning', unpaid: 'warning', reviewing: 'warning', pending: 'muted', requested: 'warning', 'in-review': 'warning',
     overdue: 'danger', rejected: 'danger', cancelled: 'danger', 'rotate-requested': 'danger', blocked: 'danger',
     paused: 'muted', draft: 'muted', 'not-needed': 'muted', todo: 'muted'

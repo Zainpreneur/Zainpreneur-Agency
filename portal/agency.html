@@ -151,61 +151,14 @@
             <input type="text" id="q_name" required>
           </div>
           <div class="field">
-            <label for="q_category">Category</label>
-            <select id="q_category">
-              <option value="infrastructure">Infrastructure &amp; Hosting</option>
-              <option value="software-platform">Software Platform</option>
-              <option value="custom-development">Custom Development</option>
-              <option value="maintenance">Maintenance &amp; Support</option>
-            </select>
+            <label for="q_suggestedPrice">Suggested price (from selected plan)</label>
+            <input type="text" id="q_suggestedPrice" disabled placeholder="Pick a tool + plan below">
           </div>
         </div>
 
-        <div id="hostingFieldsRow" class="form-grid">
-          <div class="field">
-            <label for="q_hostingProvider">Hosting provider</label>
-            <select id="q_hostingProvider"><option value="">— None —</option></select>
-          </div>
-          <div class="field">
-            <label for="q_hostingPlan">Hosting plan</label>
-            <select id="q_hostingPlan"><option value="">— Select a provider first —</option></select>
-          </div>
-        </div>
+        <div id="quoteConfiguratorMount"></div>
 
-        <div id="platformFieldRow" class="form-grid">
-          <div class="field">
-            <label for="q_platform">Platform</label>
-            <select id="q_platform"><option value="">— None / fully custom —</option></select>
-          </div>
-          <div class="field" id="dataBackendFieldWrap" style="display:none;">
-            <label for="q_dataBackend">Data backend</label>
-            <select id="q_dataBackend"><option value="">— None —</option></select>
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Device types</label>
-          <div class="check-grid" id="q_deviceTypes"></div>
-        </div>
-        <div class="field">
-          <label>OS targets</label>
-          <div class="check-grid" id="q_osTargets"></div>
-        </div>
-        <div class="field">
-          <label>Connectivity</label>
-          <div class="check-grid" id="q_connectivity"></div>
-        </div>
-
-        <div id="techStackSection" style="display:none;">
-          <h3 style="font-size:0.9rem;margin:16px 0 10px;border-top:1px dashed var(--border);padding-top:16px;">Tech Stack — Custom Development</h3>
-          <div class="stack-layer"><div class="layer-label">Frontend</div><div class="check-grid" id="q_stack_frontend"></div></div>
-          <div class="stack-layer"><div class="layer-label">Backend</div><div class="check-grid" id="q_stack_backend"></div></div>
-          <div class="stack-layer"><div class="layer-label">Database</div><div class="check-grid" id="q_stack_database"></div></div>
-          <div class="stack-layer"><div class="layer-label">Infrastructure &amp; Add-ons</div><div class="check-grid" id="q_stack_infraAddons"></div></div>
-          <div class="stack-layer"><div class="layer-label">Integrations</div><div class="check-grid" id="q_stack_integrations"></div></div>
-        </div>
-
-        <div class="form-grid" style="border-top:1px dashed var(--border);padding-top:16px;margin-top:4px;">
+        <div class="form-grid" style="border-top:1px dashed var(--border);padding-top:16px;margin-top:16px;">
           <div class="field">
             <label for="q_model">Billing model</label>
             <select id="q_model">
