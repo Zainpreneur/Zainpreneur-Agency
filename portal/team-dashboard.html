@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Tasks — Zainpreneur Team Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="team-dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Team Workspace</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="team-dashboard.html" data-nav="tasks"><span class="icon">📋</span>My Tasks</a>
+      <a href="catalogue.html" data-nav="catalogue"><span class="icon">📚</span>Software Catalogue</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>My Tasks</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="panel" id="visitsPanel" style="display:none;">
+        <div class="panel-header"><h2>📍 Upcoming Site Visits</h2></div>
+        <div class="panel-body" id="visitsBody"></div>
+      </div>
+
+      <div class="kanban" id="kanban"></div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="taskModal">
+  <div class="modal" style="max-width:720px;">
+    <div class="modal-header">
+      <h2 id="taskModalTitle">Task</h2>
+      <button class="modal-close" id="taskModalClose">×</button>
+    </div>
+    <div class="modal-body" id="taskModalBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="visitModal">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-header">
+      <h2 id="visitModalTitle">Site Visit</h2>
+      <button class="modal-close" id="visitModalClose">×</button>
+    </div>
+    <div class="modal-body" id="visitModalBody"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/team.js"></script>
+</body>
+</html>

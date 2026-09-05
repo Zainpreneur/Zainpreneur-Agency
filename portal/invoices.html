@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoices &amp; Billing — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" data-nav="dashboard"><span class="icon">🏠</span>Dashboard</a>
+      <a href="services.html" data-nav="services"><span class="icon">🧰</span>My Services</a>
+      <a href="software.html" data-nav="software"><span class="icon">💳</span>My Software</a>
+      <a href="invoices.html" data-nav="invoices"><span class="icon">🧾</span>Invoices &amp; Billing</a>
+      <a href="request-service.html" data-nav="request"><span class="icon">➕</span>Request a Service</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Invoices &amp; Billing</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="filter-bar">
+        <div class="pill-tabs" id="statusTabs">
+          <button data-status="all" class="active">All</button>
+          <button data-status="paid">Paid</button>
+          <button data-status="unpaid">Unpaid</button>
+          <button data-status="overdue">Overdue</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="invoiceTable">
+              <thead>
+                <tr><th>Invoice #</th><th>Service</th><th>Issued</th><th>Due</th><th>Amount</th><th>Status</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="invoiceModal">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header">
+      <h2>Invoice</h2>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="printArea"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modalCloseBtn">Close</button>
+      <button class="btn btn-primary" id="printBtn">🖨 Print / Save as PDF</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/invoices.js"></script>
+</body>
+</html>
