@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Zainpreneur Agency Console</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="agency.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Agency Console</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Settings</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div id="formAlert"></div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>General</h2></div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="field"><label for="g_name">Agency name</label><input type="text" id="g_name"></div>
+            <div class="field"><label for="g_support">Support email</label><input type="email" id="g_support"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Billing Defaults</h2></div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="field">
+              <label for="b_currency">Currency</label>
+              <select id="b_currency">
+                <option value="USD">USD — US Dollar</option>
+                <option value="SAR">SAR — Saudi Riyal</option>
+                <option value="PKR">PKR — Pakistani Rupee</option>
+                <option value="EUR">EUR — Euro</option>
+                <option value="GBP">GBP — British Pound</option>
+              </select>
+            </div>
+            <div class="field"><label for="b_terms">Payment terms (days)</label><input type="number" id="b_terms" min="0" step="1"></div>
+            <div class="field"><label for="b_deposit">One-time deposit (%)</label><input type="number" id="b_deposit" min="0" max="100" step="1"></div>
+          </div>
+          <p class="text-muted" style="font-size:0.82rem;">Applied to new quotes: deposit share of one-time work and invoice due dates.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Notifications</h2></div>
+        <div class="panel-body">
+          <div class="field" style="max-width:320px;">
+            <label for="n_default">Default level for new customers</label>
+            <select id="n_default">
+              <option value="all">All service and billing updates</option>
+              <option value="billing">Billing only</option>
+              <option value="critical">Critical only</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Software Catalogue</h2></div>
+        <div class="panel-body">
+          <div class="field" style="max-width:320px;">
+            <label for="c_stale">Flag pricing stale after (days)</label>
+            <input type="number" id="c_stale" min="1" step="1">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Security</h2></div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="field"><label for="s_timeout">Session timeout (minutes)</label><input type="number" id="s_timeout" min="15" step="15"></div>
+            <div class="field">
+              <label for="s_mfa">MFA for staff accounts</label>
+              <select id="s_mfa">
+                <option value="optional">Optional</option>
+                <option value="required">Required</option>
+              </select>
+            </div>
+          </div>
+          <p class="text-muted" style="font-size:0.82rem;">Enforced once authentication moves server-side; recorded here as policy.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Backend API</h2></div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="field">
+              <label for="api_mode">Data source</label>
+              <select id="api_mode">
+                <option value="mock">Mock data (local demo)</option>
+                <option value="rest">Live REST API</option>
+              </select>
+            </div>
+            <div class="field"><label for="api_base">API base URL</label><input type="text" id="api_base" placeholder="http://localhost:3000"></div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" id="apiTestBtn">Test Connection</button>
+          <span class="text-muted" style="font-size:0.82rem;" id="apiTestResult"></span>
+          <p class="text-muted" style="font-size:0.82rem;">REST mode routes <span class="chip">Api.rest</span> calls to the live API. Pages adopt bindings one entity at a time; mock remains the default.</p>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-primary" id="settingsSaveBtn">Save Settings</button>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/settings.js"></script>
+</body>
+</html>

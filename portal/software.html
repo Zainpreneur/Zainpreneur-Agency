@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Software — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>My Software</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" id="addAssetBtn">+ Add Software</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="alert alert-info" style="margin-bottom:20px;">
+        ℹ️ <strong>This is your own spend, tracked for you.</strong> We never buy or resell software on your behalf — everything here is billed by the vendor directly to you. We only add work items for the implementation, setup, or development work we've done on top of it.
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div id="savingsPanel"></div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Your Software &amp; Subscriptions</h2></div>
+        <div class="panel-body">
+          <div id="assetGrid"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="assetModal">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-header">
+      <h2 id="assetModalTitle">Add Software</h2>
+      <button class="modal-close" id="assetModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="assetForm">
+        <div class="form-grid">
+          <div class="field"><label for="a_name">Software / product name</label><input type="text" id="a_name" required placeholder="e.g. Hostinger VPS KVM 2"></div>
+          <div class="field"><label for="a_vendor">Vendor</label><input type="text" id="a_vendor" required placeholder="e.g. Hostinger"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="a_category">Category</label>
+            <select id="a_category"></select>
+          </div>
+          <div class="field">
+            <label for="a_deployment">Deployment</label>
+            <select id="a_deployment">
+              <option value="cloud">Cloud-hosted</option>
+              <option value="local">Local / on-premise</option>
+              <option value="hybrid">Hybrid</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label for="a_amount">What you pay</label><input type="number" id="a_amount" min="0" step="0.01" required></div>
+          <div class="field">
+            <label for="a_cycle">Billing cycle</label>
+            <select id="a_cycle">
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+              <option value="one-time">One-time purchase</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label for="a_lastPaid">Last paid on</label><input type="date" id="a_lastPaid"></div>
+          <div class="field" id="a_automationWrap" style="display:none;"><label for="a_automationCount"># of automations / workflows using it</label><input type="number" id="a_automationCount" min="0" step="1"></div>
+        </div>
+        <div class="field">
+          <label for="a_reason">Reason for the recurring charge, if any (optional)</label>
+          <input type="text" id="a_reason" placeholder="e.g. Includes phone support and quarterly updates">
+          <span class="hint">If this is genuinely covering ongoing support/maintenance, note it here — we won't flag it as a possible saving.</span>
+        </div>
+        <div class="field"><label for="a_usage">Usage notes (optional)</label><textarea id="a_usage" style="min-height:50px;"></textarea></div>
+
+        <div id="a_vendorContactSection" style="border-top:1px dashed var(--border);padding-top:14px;margin-top:14px;">
+          <label style="font-size:0.82rem;font-weight:600;color:var(--ink-soft);">Vendor contact (optional — useful for anything custom-built)</label>
+          <div class="form-grid" style="margin-top:8px;">
+            <div class="field"><label for="a_vendorName">Contact name</label><input type="text" id="a_vendorName"></div>
+            <div class="field"><label for="a_vendorEmail">Contact email</label><input type="email" id="a_vendorEmail"></div>
+          </div>
+        </div>
+
+        <div class="field"><label for="a_notes">Notes (optional)</label><textarea id="a_notes" style="min-height:50px;"></textarea></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="assetDeleteBtn" style="display:none;margin-right:auto;">Remove</button>
+      <button class="btn btn-secondary" id="assetCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="assetSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="assetDetailModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header">
+      <h2 id="assetDetailTitle">Software</h2>
+      <button class="modal-close" id="assetDetailClose">×</button>
+    </div>
+    <div class="modal-body" id="assetDetailBody"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/software.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Portal Login — Zainpreneur Agency</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="mark">ZP</div>
+      <div>
+        <div class="name">Zainpreneur Agency</div>
+        <div class="tag">Client Portal</div>
+      </div>
+    </div>
+
+    <div id="authBanner"></div>
+
+    <!-- SIGN IN -->
+    <div id="view-signin">
+      <div class="role-toggle" role="tablist" aria-label="Login as">
+        <button type="button" id="tabCustomer" class="active" role="tab" aria-selected="true">Customer</button>
+        <button type="button" id="tabAgency" role="tab" aria-selected="false">Agency Console</button>
+        <button type="button" id="tabTeam" role="tab" aria-selected="false">Delivery Team</button>
+      </div>
+
+      <h1 id="formTitle">Sign in to your account</h1>
+      <p class="sub" id="formSub">Track your deployed services, billing, and support requests.</p>
+
+      <div id="alertBox"></div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" required placeholder="you@company.com" autocomplete="username">
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Sign in</button>
+      </form>
+
+      <p class="forgot-password"><a href="#" id="forgotLink">Forgot password?</a></p>
+
+      <div class="demo-accounts">
+        <div class="dh" id="demoLabel">Demo customer accounts — click to sign in</div>
+        <div id="demoList"></div>
+      </div>
+    </div>
+
+    <!-- FORGOT -->
+    <div id="view-forgot" style="display:none;">
+      <h1>Reset your password</h1>
+      <p class="sub">Enter your account email and we'll issue a demo reset link.</p>
+      <div id="forgotAlert"></div>
+      <form id="forgotForm">
+        <div class="field">
+          <label for="forgotEmail">Email</label>
+          <input type="email" id="forgotEmail" required placeholder="you@company.com" autocomplete="username">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Send reset link</button>
+      </form>
+      <div id="forgotDone"></div>
+      <p class="forgot-password"><a href="#" data-back>← Back to sign in</a></p>
+    </div>
+
+    <!-- RESET -->
+    <div id="view-reset" style="display:none;">
+      <h1>Choose a new password</h1>
+      <p class="sub">Demo reset — no email is actually sent.</p>
+      <div id="resetAlert"></div>
+      <form id="resetForm">
+        <div class="field">
+          <label for="resetToken">Reset token</label>
+          <input type="text" id="resetToken" required placeholder="rst-…">
+        </div>
+        <div class="field">
+          <label for="resetPassword">New password</label>
+          <input type="password" id="resetPassword" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Set new password</button>
+      </form>
+      <p class="forgot-password"><a href="#" data-back>← Back to sign in</a></p>
+    </div>
+
+    <!-- MFA -->
+    <div id="view-mfa" style="display:none;">
+      <h1>Two-step verification</h1>
+      <p class="sub" id="mfaSub">Enter the 6-digit code from your authenticator app.</p>
+      <div id="mfaAlert"></div>
+      <form id="mfaForm">
+        <div class="field">
+          <label for="mfaCode">Verification code</label>
+          <input type="text" id="mfaCode" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" autocomplete="one-time-code">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Verify</button>
+      </form>
+      <p class="forgot-password"><a href="#" data-back>Cancel</a></p>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/api.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request a Service — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Request a Service</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="panel">
+        <div class="panel-body">
+          <div id="formAlert"></div>
+          <h2 class="section-title">1. What kind of service do you need?</h2>
+          <p class="section-sub">Pick a category and configure it precisely — the more you tell us here, the faster we can scope and quote it.</p>
+
+          <div id="configuratorMount"></div>
+
+          <form id="requestForm">
+            <div class="dynamic-fields" id="commonFields" style="display:none;">
+              <h2 class="section-title" style="border-top:1px dashed var(--border);padding-top:20px;margin-top:20px;">2. Tell us about the project</h2>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="title">Project title</label>
+                  <input type="text" id="title" required placeholder="e.g. Customer loyalty module">
+                </div>
+                <div class="field">
+                  <label for="priority">Priority</label>
+                  <select id="priority">
+                    <option value="normal">Normal</option>
+                    <option value="high">High — time sensitive</option>
+                    <option value="low">Low — no rush</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="description">Describe what you need</label>
+                <textarea id="description" required placeholder="The more detail, the faster we can scope this."></textarea>
+              </div>
+
+              <div class="form-grid">
+                <div class="field">
+                  <label for="budgetRange">Budget range</label>
+                  <select id="budgetRange">
+                    <option>Under $1,000</option>
+                    <option>$1,000 - $5,000</option>
+                    <option selected>$5,000 - $10,000</option>
+                    <option>$10,000 - $25,000</option>
+                    <option>$25,000+</option>
+                    <option>Not sure yet</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="timeline">Desired timeline</label>
+                  <select id="timeline">
+                    <option>As soon as possible</option>
+                    <option selected>2-3 months</option>
+                    <option>3-6 months</option>
+                    <option>Flexible</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="margin-top:8px;">Submit Request</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Your Requests</h2></div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="requestTable">
+              <thead><tr><th>Title</th><th>Category</th><th>Submitted</th><th>Budget</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/request.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recommendations — Zainpreneur Agency Console</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="agency.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Agency Console</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Recommendations</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="alert alert-info" style="margin-bottom:20px;">
+        ℹ️ Savings findings pipeline: <strong>flagged → proposed → accepted</strong>
+        (or dismissed). Proposing surfaces the finding proactively; accepting
+        books the saving. Never equate “free” with “better” — record the
+        reasoning in the customer thread.
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="filter-bar">
+        <div class="pill-tabs" id="stageTabs">
+          <button data-stage="all" class="active">All</button>
+          <button data-stage="flagged">Flagged</button>
+          <button data-stage="proposed">Proposed</button>
+          <button data-stage="accepted">Accepted</button>
+          <button data-stage="dismissed">Dismissed</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="recTable">
+              <thead><tr><th>Customer</th><th>Finding</th><th>Saving /yr</th><th>Stage</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/recommendations.js"></script>
+</body>
+</html>

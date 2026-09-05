@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roles &amp; Permissions — Zainpreneur Agency Console</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="agency.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Agency Console</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Roles &amp; Permissions</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="alert alert-info" style="margin-bottom:20px;">
+        ℹ️ <strong>UI visibility only.</strong> These controls decide what the
+        interface shows — real authorization is enforced server-side. Custom
+        roles extend a base role with extra grants and can be assigned to team
+        members from the Users page.
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Built-in Role Matrix</h2></div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="matrixTable">
+              <thead><tr><th>Permission</th><th>Customer</th><th>Agency</th><th>Team</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Custom Roles</h2>
+          <button class="btn btn-primary btn-sm" id="addRoleBtn">+ Create Role</button>
+        </div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="roleTable">
+              <thead><tr><th>Role</th><th>Extends</th><th>Extra Grants</th><th>Assigned To</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="roleModal">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header">
+      <h2 id="roleModalTitle">Create Role</h2>
+      <button class="modal-close" id="roleModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="roleForm">
+        <div class="form-grid">
+          <div class="field"><label for="r_name">Role name</label><input type="text" id="r_name" required placeholder="e.g. Field Technician"></div>
+          <div class="field">
+            <label for="r_base">Extends base role</label>
+            <select id="r_base">
+              <option value="team">Team</option>
+              <option value="agency">Agency</option>
+              <option value="customer">Customer</option>
+            </select>
+          </div>
+        </div>
+        <div id="grantGrid"></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="roleDeleteBtn" style="display:none;margin-right:auto;">Delete</button>
+      <button class="btn btn-secondary" id="roleCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="roleSaveBtn">Save Role</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/roles.js"></script>
+</body>
+</html>

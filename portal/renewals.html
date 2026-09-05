@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Renewals — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Renewals</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="filter-bar">
+        <div class="pill-tabs" id="rangeTabs">
+          <button data-days="all" class="active">All upcoming</button>
+          <button data-days="30">30 days</button>
+          <button data-days="60">60 days</button>
+          <button data-days="90">90 days</button>
+          <button data-days="custom">Custom</button>
+        </div>
+        <div id="customRange" style="display:none;gap:8px;align-items:center;">
+          <input type="date" id="customFrom" aria-label="From date">
+          <span class="text-muted">→</span>
+          <input type="date" id="customTo" aria-label="To date">
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="renewalTable">
+              <thead><tr><th>Item</th><th>Type</th><th>Renewal Date</th><th>In</th><th>Cost</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/renewals.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Documents</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" id="uploadBtn">+ Upload Document</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="filter-bar">
+        <div class="pill-tabs" id="kindTabs">
+          <button data-kind="all" class="active">All</button>
+          <button data-kind="report">Reports</button>
+          <button data-kind="evidence">Evidence</button>
+          <button data-kind="config">Config</button>
+          <button data-kind="migration">Migration</button>
+          <button data-kind="approval">Approvals</button>
+          <button data-kind="handover">Handover</button>
+        </div>
+        <select id="serviceFilter">
+          <option value="all">All services</option>
+        </select>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="docTable">
+              <thead><tr><th>Title</th><th>Kind</th><th>Service</th><th>File</th><th>Updated</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="docModal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header">
+      <h2 id="docModalTitle">Upload Document</h2>
+      <button class="modal-close" id="docModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="docForm">
+        <div class="field"><label for="d_title">Title</label><input type="text" id="d_title" required placeholder="e.g. Go-live handover"></div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="d_kind">Kind</label>
+            <select id="d_kind">
+              <option value="report">Report</option>
+              <option value="evidence">Evidence</option>
+              <option value="config">Configuration</option>
+              <option value="migration">Migration file</option>
+              <option value="approval">Approval</option>
+              <option value="handover">Handover</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="d_service">Linked service</label>
+            <select id="d_service"></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="d_file">File</label>
+          <input type="file" id="d_file" style="display:block;">
+          <span class="hint">Frontend demo: only file metadata is stored. Byte storage arrives with the backend object store.</span>
+        </div>
+        <div class="field"><label for="d_notes">Notes (optional)</label><textarea id="d_notes" style="min-height:50px;"></textarea></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="docCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="docSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="previewModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h2 id="previewTitle">Document</h2>
+      <button class="modal-close" id="previewClose">×</button>
+    </div>
+    <div class="modal-body" id="previewBody"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/documents.js"></script>
+</body>
+</html>

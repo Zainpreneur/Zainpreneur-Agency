@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Account</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div id="formAlert"></div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Business Profile</h2></div>
+        <div class="panel-body">
+          <form id="profileForm">
+            <div class="form-grid">
+              <div class="field"><label for="p_company">Business name</label><input type="text" id="p_company" required></div>
+              <div class="field"><label for="p_contact">Primary contact</label><input type="text" id="p_contact" required></div>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label for="p_email">Business email</label><input type="email" id="p_email" required></div>
+              <div class="field"><label for="p_phone">Phone</label><input type="text" id="p_phone"></div>
+            </div>
+            <div class="field"><label for="p_industry">Industry</label><input type="text" id="p_industry"></div>
+            <button type="submit" class="btn btn-primary btn-sm">Save Profile</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Preferences</h2></div>
+        <div class="panel-body">
+          <form id="prefsForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="pf_currency">Display currency</label>
+                <select id="pf_currency">
+                  <option value="USD">USD — US Dollar</option>
+                  <option value="SAR">SAR — Saudi Riyal</option>
+                  <option value="PKR">PKR — Pakistani Rupee</option>
+                  <option value="EUR">EUR — Euro</option>
+                  <option value="GBP">GBP — British Pound</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="pf_notifications">Notifications</label>
+                <select id="pf_notifications">
+                  <option value="all">All service and billing updates</option>
+                  <option value="billing">Billing only</option>
+                  <option value="critical">Critical only</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label for="pf_billingEmail">Billing email</label><input type="email" id="pf_billingEmail"></div>
+            <div class="field">
+              <label for="pf_lang">Language</label>
+              <select id="pf_lang">
+                <option value="en">English</option>
+                <option value="ar">العربية (RTL)</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Save Preferences</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Organization Users</h2>
+          <button class="btn btn-primary btn-sm" id="addUserBtn">+ Add User</button>
+        </div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="userTable">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Last Activity</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Sessions</h2></div>
+        <div class="panel-body" id="sessionBody"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="userModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h2 id="userModalTitle">Add User</h2>
+      <button class="modal-close" id="userModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="userForm">
+        <div class="form-grid">
+          <div class="field"><label for="u_name">Name</label><input type="text" id="u_name" required></div>
+          <div class="field"><label for="u_email">Email</label><input type="email" id="u_email" required></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label for="u_phone">Phone</label><input type="text" id="u_phone"></div>
+          <div class="field">
+            <label for="u_role">Role</label>
+            <select id="u_role">
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="userDeleteBtn" style="display:none;margin-right:auto;">Disable</button>
+      <button class="btn btn-secondary" id="userCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="userSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/account.js"></script>
+</body>
+</html>

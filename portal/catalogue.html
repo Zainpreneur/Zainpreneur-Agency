@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Catalogue — Zainpreneur Agency</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="team-dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Team Workspace</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Software Catalogue</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <p class="section-sub">Every service category, tool, and plan tier the agency quotes and deploys from — used to build precise, structured task configurations rather than free-text notes.</p>
+      <div class="account-security-notice" style="margin-bottom:22px;">
+        <span class="ico">ℹ️</span>
+        <span><strong>About this pricing.</strong> This is a static site with no backend, so it cannot live-scrape vendor pricing pages on click (browsers block cross-origin requests like that, and true scraping needs a server). Prices below were gathered via web search against third-party pricing trackers — treat them as a strong starting point, not gospel. Click a tool's pricing link to check the vendor's own page, then use <strong>Update Pricing</strong> to save what you find.</span>
+      </div>
+
+      <div id="categoriesContainer"></div>
+
+      <div class="catalogue-section">
+        <div class="panel">
+          <div class="panel-header"><h2>📱 Device Types, OS Targets &amp; Connectivity</h2></div>
+          <div class="panel-body" id="deviceSection"></div>
+        </div>
+      </div>
+
+      <div class="catalogue-section">
+        <div class="panel">
+          <div class="panel-header"><h2>🛠️ Custom Development Tech Stack</h2></div>
+          <div class="panel-body" id="stackSection"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Update Pricing (agency only) -->
+<div class="modal-overlay" id="pricingModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header">
+      <h2 id="pricingModalTitle">Update Pricing</h2>
+      <button class="modal-close" id="pricingModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-muted" style="font-size:0.85rem;margin-top:0;">Edit each plan's price and feature list, then save. This marks the tool as manually verified today.</p>
+      <div id="pricingEditList"></div>
+      <button type="button" class="btn btn-secondary btn-sm" id="addPlanBtn">+ Add Plan</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="pricingCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="pricingSaveBtn">Save Pricing</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/catalogue-page.js"></script>
+</body>
+</html>

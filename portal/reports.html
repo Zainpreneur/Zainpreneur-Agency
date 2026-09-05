@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports — Zainpreneur Agency Console</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="agency.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Agency Console</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Reports</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Monthly Recurring Revenue by Customer</h2></div>
+        <div class="panel-body" id="mrrChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Services by Status</h2></div>
+        <div class="panel-body" id="serviceChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Tasks by Status</h2></div>
+        <div class="panel-body" id="taskChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Team Workload (Open Tasks)</h2></div>
+        <div class="panel-body" id="workloadChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Support &amp; Requests by Status</h2></div>
+        <div class="panel-body" id="supportChart"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Catalogue Health</h2></div>
+        <div class="panel-body" id="catalogueStats"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/reports.js"></script>
+</body>
+</html>

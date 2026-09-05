@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technology Inventory — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Technology Inventory</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+      <div class="topbar-right">
+        <a href="software.html" class="btn btn-primary btn-sm">+ Add System</a>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="alert alert-info" style="margin-bottom:20px;">
+        ℹ️ <strong>Your systems, tracked for you.</strong> Everything here is owned
+        and paid by you directly to vendors. Change status as systems age, and run
+        an assessment when you're deciding what to keep, replace, or retire.
+      </div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="filter-bar">
+        <div class="pill-tabs" id="statusTabs">
+          <button data-status="all" class="active">All</button>
+          <button data-status="active">Active</button>
+          <button data-status="needs-maintenance">Needs Maintenance</button>
+          <button data-status="at-risk">At Risk</button>
+          <button data-status="legacy">Legacy</button>
+          <button data-status="retired">Retired</button>
+        </div>
+        <select id="categoryFilter">
+          <option value="all">All categories</option>
+        </select>
+      </div>
+
+      <div class="service-grid" id="assetGrid"></div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="techModal">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <h2 id="techModalTitle">System</h2>
+      <button class="modal-close" id="techModalClose">×</button>
+    </div>
+    <div class="modal-body" id="techModalBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="assessModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header">
+      <h2>System Assessment</h2>
+      <button class="modal-close" id="assessClose">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="text-muted" style="font-size:0.85rem;margin-top:0;" id="assessSub"></p>
+      <form id="assessForm">
+        <div class="field"><label for="as_requirements">Business requirements</label><textarea id="as_requirements" placeholder="What must this system do for the business?"></textarea></div>
+        <div class="field"><label for="as_capabilities">Current capabilities</label><textarea id="as_capabilities" placeholder="What does it handle well today?"></textarea></div>
+        <div class="field"><label for="as_problems">Problems</label><textarea id="as_problems" placeholder="What's broken, slow, or missing?"></textarea></div>
+        <div class="field"><label for="as_cost">Current cost picture</label><input type="text" id="as_cost" placeholder="e.g. $240/yr + ~2 hrs/mo manual work"></div>
+        <div class="field"><label for="as_alternatives">Alternative options</label><textarea id="as_alternatives" placeholder="What else could do this job?"></textarea></div>
+        <div class="field">
+          <label for="as_recommendation">Recommendation</label>
+          <select id="as_recommendation">
+            <option value="keep">Keep as-is</option>
+            <option value="maintain">Maintain / upgrade</option>
+            <option value="replace">Replace</option>
+            <option value="retire">Retire</option>
+            <option value="review">Needs deeper review</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="assessCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="assessSaveBtn">Save Assessment</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/technology.js"></script>
+</body>
+</html>

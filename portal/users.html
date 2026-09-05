@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Users — Zainpreneur Agency Console</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="agency.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Agency Console</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav"></nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Users</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div id="formAlert"></div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Agency Staff</h2></div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="staffTable">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Delivery Team</h2>
+          <button class="btn btn-primary btn-sm" id="addMemberBtn">+ Add Member</button>
+        </div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="teamTable">
+              <thead><tr><th>Name</th><th>Email</th><th>Operational Role</th><th>Skills</th><th>Open Tasks</th><th>Status</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><h2>Customer Users</h2></div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="customerTable">
+              <thead><tr><th>User</th><th>Organization</th><th>Role</th><th>Status</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="memberModal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-header">
+      <h2 id="memberModalTitle">Add Team Member</h2>
+      <button class="modal-close" id="memberModalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <form id="memberForm">
+        <div class="form-grid">
+          <div class="field"><label for="m_name">Name</label><input type="text" id="m_name" required></div>
+          <div class="field"><label for="m_email">Email</label><input type="email" id="m_email" required></div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="m_role">Operational role</label>
+            <select id="m_role">
+              <option>Implementer</option>
+              <option>Senior Implementer</option>
+              <option>Technical Lead</option>
+              <option>Developer</option>
+              <option>Designer</option>
+              <option>Project Manager</option>
+              <option>Support</option>
+              <option>Consultant</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="m_status">Status</label>
+            <select id="m_status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="m_skills">Skills (comma-separated)</label><input type="text" id="m_skills" placeholder="Linux, Docker, Odoo"></div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="m_access">Access role</label>
+            <select id="m_access"></select>
+          </div>
+          <div class="field"><label for="m_password">Password (blank keeps current)</label><input type="text" id="m_password" placeholder="Defaults to team1234 for new members"></div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="memberDeleteBtn" style="display:none;margin-right:auto;">Delete</button>
+      <button class="btn btn-secondary" id="memberCancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="memberSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/catalogue.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/api.js"></script>
+<script src="js/search.js"></script>
+<script src="js/notifications.js"></script>
+<script src="js/users.js"></script>
+</body>
+</html>
