@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Zainpreneur Client Portal</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="dashboard.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Client Portal</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" data-nav="dashboard"><span class="icon">🏠</span>Dashboard</a>
+      <a href="services.html" data-nav="services"><span class="icon">🧰</span>My Services</a>
+      <a href="invoices.html" data-nav="invoices"><span class="icon">🧾</span>Invoices &amp; Billing</a>
+      <a href="request-service.html" data-nav="request"><span class="icon">➕</span>Request a Service</a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="am">
+          <span class="text-muted">Account Manager</span>
+          <strong id="amName">—</strong>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div id="renewalAlert"></div>
+
+      <div class="stat-grid" id="statGrid"></div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Your Services</h2>
+          <a href="services.html" class="link">View all →</a>
+        </div>
+        <div class="panel-body">
+          <div class="service-grid" id="serviceGrid"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h2>Recent Invoices</h2>
+          <a href="invoices.html" class="link">View all →</a>
+        </div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table class="zp-table" id="invoiceTable">
+              <thead>
+                <tr><th>Invoice</th><th>Service</th><th>Issued</th><th>Due</th><th>Amount</th><th>Status</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="progressPanel" style="display:none;">
+        <div class="panel-header"><h2>Projects In Progress</h2></div>
+        <div class="panel-body" id="progressBody"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

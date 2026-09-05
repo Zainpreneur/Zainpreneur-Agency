@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Portal Login — Zainpreneur Agency</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="mark">ZP</div>
+      <div>
+        <div class="name">Zainpreneur Agency</div>
+        <div class="tag">Client Portal</div>
+      </div>
+    </div>
+
+    <div class="role-toggle" role="tablist" aria-label="Login as">
+      <button type="button" id="tabCustomer" class="active" role="tab" aria-selected="true">Customer</button>
+      <button type="button" id="tabAgency" role="tab" aria-selected="false">Agency Team</button>
+    </div>
+
+    <h1 id="formTitle">Sign in to your account</h1>
+    <p class="sub" id="formSub">Track your deployed services, billing, and support requests.</p>
+
+    <div id="alertBox"></div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="you@company.com" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" style="margin-top:6px;">Sign in</button>
+    </form>
+
+    <div class="demo-accounts">
+      <div class="dh" id="demoLabel">Demo customer accounts — click to sign in</div>
+      <div id="demoList"></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>

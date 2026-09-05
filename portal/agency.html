@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency Console — Zainpreneur Agency</title>
+<link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <a href="agency.html">
+        <div class="mark">ZP</div>
+        <div>
+          <div class="name">Zainpreneur Agency</div>
+          <div class="tag">Agency Console</div>
+        </div>
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#overview" data-nav="overview" data-view="overview"><span class="icon">📊</span>Overview</a>
+      <a href="#customers" data-nav="customers" data-view="customers"><span class="icon">🏢</span>Customers</a>
+      <a href="#requests" data-nav="requests" data-view="requests"><span class="icon">📥</span>Service Requests <span class="badge badge--info" id="pendingBadge" style="margin-left:auto;"></span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="avatar" id="userChipInitials">–</div>
+        <div class="who">
+          <div class="name" id="userChipName">Loading…</div>
+          <div class="sub" id="userChipSub"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Log out</button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="pageHeading">Overview</h1>
+        <div class="topbar-sub" id="topbarDate"></div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- OVERVIEW -->
+      <section id="view-overview">
+        <div class="stat-grid" id="agencyStatGrid"></div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Monthly Recurring Revenue by Customer</h2></div>
+          <div class="panel-body" id="mrrBreakdown"></div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section id="view-customers" style="display:none;">
+        <div class="panel">
+          <div class="panel-body no-pad">
+            <div class="table-wrap">
+              <table class="zp-table" id="customerTable">
+                <thead><tr><th>Company</th><th>Industry</th><th>Since</th><th>Active Services</th><th>MRR</th><th>Outstanding</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REQUESTS -->
+      <section id="view-requests" style="display:none;">
+        <div class="panel">
+          <div class="panel-body no-pad">
+            <div class="table-wrap">
+              <table class="zp-table" id="requestTable">
+                <thead><tr><th>Customer</th><th>Title</th><th>Category</th><th>Submitted</th><th>Budget</th><th>Status</th><th></th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Customer detail modal -->
+<div class="modal-overlay" id="customerModal">
+  <div class="modal" style="max-width:760px;">
+    <div class="modal-header">
+      <h2 id="customerModalTitle">Customer</h2>
+      <button class="modal-close" data-close="customerModal">×</button>
+    </div>
+    <div class="modal-body" id="customerModalBody"></div>
+  </div>
+</div>
+
+<!-- Quote / convert-request modal -->
+<div class="modal-overlay" id="quoteModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Review Request &amp; Create Service</h2>
+      <button class="modal-close" data-close="quoteModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="quoteRequestSummary"></div>
+      <form id="quoteForm">
+        <div class="form-grid">
+          <div class="field">
+            <label for="q_name">Service name</label>
+            <input type="text" id="q_name" required>
+          </div>
+          <div class="field">
+            <label for="q_category">Category</label>
+            <select id="q_category">
+              <option value="infrastructure">Infrastructure &amp; Hosting</option>
+              <option value="software-platform">Software Platform</option>
+              <option value="custom-development">Custom Development</option>
+              <option value="maintenance">Maintenance &amp; Support</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="q_provider">Provider (optional)</label>
+            <input type="text" id="q_provider" placeholder="e.g. Hostinger">
+          </div>
+          <div class="field">
+            <label for="q_plan">Plan (optional)</label>
+            <input type="text" id="q_plan" placeholder="e.g. VPS KVM 2">
+          </div>
+        </div>
+        <div class="field">
+          <label for="q_stack">Stack / deliverables (comma-separated)</label>
+          <input type="text" id="q_stack" placeholder="e.g. Ubuntu 22.04, Docker, Odoo 17 CE">
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="q_model">Billing model</label>
+            <select id="q_model">
+              <option value="recurring">Recurring</option>
+              <option value="one-time">One-time</option>
+            </select>
+          </div>
+          <div class="field" id="q_cycleField">
+            <label for="q_cycle">Billing cycle</label>
+            <select id="q_cycle">
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="q_cost">Our cost ($)</label>
+            <input type="number" id="q_cost" min="0" step="0.01" required>
+          </div>
+          <div class="field">
+            <label for="q_price">Price charged to customer ($)</label>
+            <input type="number" id="q_price" min="0" step="0.01" required>
+          </div>
+        </div>
+        <div class="field">
+          <label>
+            <input type="checkbox" id="q_createInvoice" checked style="width:auto;display:inline-block;margin-right:6px;">
+            Generate the first invoice now (deposit for one-time work, or first cycle for recurring)
+          </label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="declineBtn">Decline Request</button>
+      <button class="btn btn-primary" id="quoteSubmitBtn">Create Service &amp; Quote</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/agency.js"></script>
+</body>
+</html>
