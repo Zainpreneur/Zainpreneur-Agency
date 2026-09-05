@@ -26,7 +26,7 @@ const ZP_SERVICE_CATEGORIES = [
     tools: ['appsheet', 'glide'], allowCustom: false },
   { id: 'automation', label: 'Automation & Integrations', icon: '⚙️', internalCategory: 'automation',
     description: "Connecting the customer's existing tools together with automated workflows.",
-    tools: ['n8n', 'make', 'zapier'], allowCustom: false },
+    tools: ['n8n', 'make', 'zapier', 'ifttt'], allowCustom: false },
   { id: 'infrastructure', label: 'Infrastructure & Hosting', icon: '🖥️', internalCategory: 'infrastructure',
     description: 'Servers and VPS — the raw hosting a platform runs on.',
     tools: ['hostinger-vps', 'digitalocean', 'aws'], allowCustom: false },
@@ -587,4 +587,76 @@ function zpMountConfigurator(container, opts) {
     getServiceCategoryId: () => state.serviceCategoryId,
     getInternalCategory, getConfig, getSuggestedPrice, reset, setState
   };
+}
+
+/* =========================================================================
+   Savings advisor
+   Compares a customer's self-reported software assets against the
+   catalogue to flag likely savings — never a hard rule, always shown as a
+   suggestion with the reasoning and an estimated dollar figure so a human
+   makes the final call. A customer's own noted reason for a recurring
+   charge (reasonForRecurringCharge) always suppresses the "unjustified
+   fee" flag — the point is catching unexplained cost, not penalizing
+   legitimate support/maintenance agreements.
+   ========================================================================= */
+
+/** The first tool in a category that has a $0 plan — used as a free-alternative suggestion. */
+function zpCheapestFreeAlternative(categoryDefId) {
+  const def = zpServiceCategoryDef(categoryDefId);
+  if (!def) return null;
+  for (const toolId of def.tools) {
+    const tool = zpGetTool(toolId);
+    if (!tool) continue;
+    const freePlan = tool.plans.find(p => p.price === 0);
+    if (freePlan) return { tool, plan: freePlan };
+  }
+  return null;
+}
+
+/** A free automation tool whose free-tier automation limit covers the customer's stated usage. */
+function zpAutomationFreeAlternative(automationCount) {
+  const candidates = [{ toolId: 'ifttt', planId: 'free', limit: 2 }, { toolId: 'make', planId: 'free', limit: 2 }];
+  for (const c of candidates) {
+    if (automationCount <= c.limit) {
+      const tool = zpGetTool(c.toolId), plan = tool ? zpGetToolPlan(c.toolId, c.planId) : null;
+      if (tool && plan) return { tool, plan, limit: c.limit };
+    }
+  }
+  return null;
+}
+
+/** Runs every rule against one software asset. Returns a list of findings (often empty). */
+function zpAnalyzeAsset(asset) {
+  const findings = [];
+  const annualCost = zpAssetAnnualCost(asset);
+
+  if (asset.deploymentType === 'local' && asset.billing.cycle !== 'one-time' && asset.billing.amount > 0 && !asset.reasonForRecurringCharge) {
+    const alt = zpCheapestFreeAlternative(asset.category);
+    findings.push({
+      assetId: asset.id, type: 'unjustified-recurring-fee', severity: 'high',
+      message: `${asset.name} charges ${zpFormatCurrency(annualCost, asset.billing.currency)}/yr for software installed locally, with no maintenance or support reason on file.`,
+      suggestion: alt ? `Consider ${alt.tool.label} (${alt.plan.label}) instead — ${zpFormatToolPrice(alt.plan).toLowerCase()}, and supports local/self-hosted deployment.` : 'Ask the vendor what the recurring fee actually covers, or look at a self-hosted alternative.',
+      estimatedAnnualSavings: annualCost
+    });
+  }
+
+  if (asset.category === 'automation' && asset.automationCount != null && asset.billing.amount > 0) {
+    const alt = zpAutomationFreeAlternative(asset.automationCount);
+    if (alt) {
+      findings.push({
+        assetId: asset.id, type: 'automation-downgrade', severity: 'medium',
+        message: `${asset.name} costs ${zpFormatCurrency(annualCost, asset.billing.currency)}/yr for just ${asset.automationCount} automation${asset.automationCount === 1 ? '' : 's'}.`,
+        suggestion: `${alt.tool.label}'s free plan covers up to ${alt.limit} automations at no cost — switching would need a small setup pass from our team to rebuild them there.`,
+        estimatedAnnualSavings: annualCost
+      });
+    }
+  }
+
+  return findings;
+}
+
+/** All findings across every software asset a customer has on file, sorted highest-savings first. */
+function zpAllSavingsForCustomer(customerId) {
+  const findings = zpGetAssetsForCustomer(customerId).flatMap(zpAnalyzeAsset);
+  return findings.sort((a, b) => b.estimatedAnnualSavings - a.estimatedAnnualSavings);
 }

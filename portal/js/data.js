@@ -188,6 +188,16 @@ const ZP_SEED = {
         { id: 'ec2-t3-micro', label: 'EC2 t3.micro', price: 7.59, currency: 'USD', cycle: 'monthly', limits: { vcpu: '2 vCPU', ram: '1GB RAM' }, features: ['us-east-1 on-demand rate'], limitations: [] },
         { id: 'ec2-t3-large', label: 'EC2 t3.large', price: 60.74, currency: 'USD', cycle: 'monthly', limits: { vcpu: '2 vCPU', ram: '8GB RAM' }, features: ['us-east-1 on-demand rate'], limitations: [] }
       ]
+    },
+    'ifttt': {
+      id: 'ifttt', label: 'IFTTT', vendor: 'IFTTT',
+      website: 'https://ifttt.com/pricing', lastVerified: '2026-09-05', dataSource: 'web search (unverified against vendor site)',
+      specialty: 'Best when a customer only needs one or two simple single-trigger automations — the free tier runs them unlimited times at no cost.',
+      plans: [
+        { id: 'free', label: 'Free', price: 0, currency: 'USD', cycle: 'free', limits: { applets: '2 active Applets (unlimited runs)' }, features: ['1 trigger + 1 action per Applet'], limitations: ['No multi-action Applets', 'No webhooks'] },
+        { id: 'pro', label: 'Pro', price: 2.49, currency: 'USD', cycle: 'monthly', limits: { applets: '20 active Applets' }, features: ['Multi-action Applets', 'Webhooks', 'Faster execution'], limitations: [] },
+        { id: 'pro-plus', label: 'Pro+', price: 8.49, currency: 'USD', cycle: 'monthly', limits: { applets: 'Unlimited Applets' }, features: ['Filter code (JavaScript)', 'AI services', 'Multiple account connections'], limitations: [] }
+      ]
     }
   },
 
@@ -197,8 +207,9 @@ const ZP_SEED = {
       category: 'infrastructure', provider: 'Hostinger', plan: 'VPS KVM 2',
       stack: ['Ubuntu 22.04 LTS', 'Docker', 'Odoo 17 CE', 'PostgreSQL 15', 'Nginx + SSL'],
       status: 'active', deployedDate: '2024-03-10',
-      description: 'Fully managed Odoo ERP deployment (Sales, Inventory, Accounting) hosted on a dedicated Hostinger VPS KVM 2 instance with automated daily backups.',
-      billing: { model: 'recurring', cycle: 'monthly', ourCost: 12.99, customerPrice: 49.00, currency: 'USD', nextRenewal: '2026-10-10' },
+      description: 'Server setup and Odoo configuration (Website + Accounting modules) on Aegis’s own Hostinger VPS and Odoo subscription. We never bill for the VPS or Odoo license itself — Aegis pays Hostinger and Odoo directly; the charge below is our implementation work only. See "My Software" for what Aegis pays those vendors.',
+      billing: { model: 'one-time', ourCost: 350.00, customerPrice: 1200.00, currency: 'USD' },
+      assetIds: ['asset-001', 'asset-002'],
       milestones: null,
       config: {
         hostingProvider: 'hostinger', hostingPlan: 'vps-kvm-2', platform: 'odoo',
@@ -290,8 +301,9 @@ const ZP_SEED = {
       category: 'infrastructure', provider: 'Hostinger', plan: 'VPS KVM 4',
       stack: ['Ubuntu 22.04 LTS', 'Docker', 'Odoo 17 CE', 'PostgreSQL 15'],
       status: 'provisioning', deployedDate: null,
-      description: 'ERP environment currently being provisioned; go-live is scheduled once data migration from the legacy system finishes.',
-      billing: { model: 'recurring', cycle: 'monthly', ourCost: 24.99, customerPrice: 89.00, currency: 'USD', nextRenewal: '2026-10-01' },
+      description: 'Server setup and Odoo Community configuration on Nimbus’s own Hostinger VPS — Odoo Community itself is free, self-hosted software. Nimbus pays Hostinger directly for the VPS; the charge below is our setup work only. Go-live is scheduled once data migration from the legacy system finishes.',
+      billing: { model: 'one-time', ourCost: 220.00, customerPrice: 650.00, currency: 'USD' },
+      assetIds: ['asset-007'],
       milestones: null,
       config: {
         hostingProvider: 'hostinger', hostingPlan: 'vps-kvm-4', platform: 'odoo',
@@ -337,8 +349,9 @@ const ZP_SEED = {
       category: 'automation', provider: 'n8n', plan: 'Cloud Starter',
       stack: ['n8n', 'Gmail', 'Google Sheets', 'Slack'],
       status: 'in-development', deployedDate: null,
-      description: 'Automated workflows connecting incoming wholesale order emails to a Google Sheets order tracker and Slack notifications for the fulfillment team.',
-      billing: { model: 'recurring', cycle: 'monthly', ourCost: 15.00, customerPrice: 75.00, currency: 'USD', nextRenewal: '2026-10-05' },
+      description: 'Building and maintaining automated workflows on Nimbus’s own n8n Cloud subscription — connecting incoming wholesale order emails to a Google Sheets order tracker and Slack notifications. Nimbus pays n8n directly for the workspace; the recurring charge below is our build + ongoing monitoring retainer, not the n8n subscription itself.',
+      billing: { model: 'recurring', cycle: 'monthly', ourCost: 10.00, customerPrice: 35.00, currency: 'USD', nextRenewal: '2026-10-05' },
+      assetIds: ['asset-009'],
       milestones: null,
       config: {
         deliveryMode: 'virtual', toolId: 'n8n', planId: 'cloud-starter',
@@ -348,13 +361,35 @@ const ZP_SEED = {
         ]
       },
       accounts: []
+    },
+    {
+      id: 'svc-011', customerId: 'cust-d', name: 'Ordering Website Revamp',
+      category: 'custom-development', provider: null, plan: null,
+      stack: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js / Express'],
+      status: 'in-development', deployedDate: null,
+      description: "Modernizing Nimbus's existing ordering website — responsive redesign, updated checkout flow, and mobile optimization — building on the site they already own rather than starting from scratch.",
+      billing: { model: 'one-time', ourCost: 900.00, customerPrice: 2800.00, currency: 'USD' },
+      assetIds: ['asset-006'],
+      milestones: [
+        { name: 'Audit existing site & scope revamp', status: 'completed', date: '2026-08-20' },
+        { name: 'Responsive redesign', status: 'in-progress', date: null },
+        { name: 'Checkout flow rebuild', status: 'pending', date: null },
+        { name: 'QA & launch', status: 'pending', date: null }
+      ],
+      config: {
+        deliveryMode: 'virtual',
+        techStack: { frontend: ['HTML', 'CSS', 'JavaScript', 'React'], backend: ['Node.js / Express'], database: [], infraAddons: [], integrations: [] }
+      },
+      accounts: []
     }
   ],
 
   invoices: [
-    { id: 'INV-2026-1001', customerId: 'cust-a', serviceId: 'svc-001', issueDate: '2026-07-10', dueDate: '2026-07-17', status: 'paid', paidDate: '2026-07-12', currency: 'USD', items: [{ desc: 'Odoo ERP Platform — Hosting (Jul 2026)', qty: 1, unitPrice: 49.00 }] },
-    { id: 'INV-2026-1002', customerId: 'cust-a', serviceId: 'svc-001', issueDate: '2026-08-10', dueDate: '2026-08-17', status: 'paid', paidDate: '2026-08-11', currency: 'USD', items: [{ desc: 'Odoo ERP Platform — Hosting (Aug 2026)', qty: 1, unitPrice: 49.00 }] },
-    { id: 'INV-2026-1003', customerId: 'cust-a', serviceId: 'svc-001', issueDate: '2026-09-01', dueDate: '2026-09-08', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Odoo ERP Platform — Hosting (Sep 2026)', qty: 1, unitPrice: 49.00 }] },
+    { id: 'INV-2024-1001', customerId: 'cust-a', serviceId: 'svc-001', issueDate: '2024-03-10', dueDate: '2024-03-17', status: 'paid', paidDate: '2024-03-11', currency: 'USD', items: [
+      { desc: 'Server Setup — Hostinger VPS + Odoo Install', qty: 1, unitPrice: 300.00 },
+      { desc: 'Website Module Configuration', qty: 1, unitPrice: 400.00 },
+      { desc: 'Accounting Module Configuration', qty: 1, unitPrice: 500.00 }
+    ] },
     { id: 'INV-2026-1004', customerId: 'cust-a', serviceId: 'svc-002', issueDate: '2026-06-01', dueDate: '2026-06-08', status: 'paid', paidDate: '2026-06-05', currency: 'USD', items: [{ desc: 'Inventory Sync Module — Deposit (30% of project)', qty: 1, unitPrice: 1260.00 }] },
     { id: 'INV-2026-1005', customerId: 'cust-a', serviceId: 'svc-002', issueDate: '2026-07-22', dueDate: '2026-07-29', status: 'paid', paidDate: '2026-07-24', currency: 'USD', items: [{ desc: 'Inventory Sync Module — Milestone: Sprint 1 complete (35%)', qty: 1, unitPrice: 1470.00 }] },
 
@@ -371,8 +406,9 @@ const ZP_SEED = {
     { id: 'INV-2026-3004', customerId: 'cust-c', serviceId: 'svc-006', issueDate: '2026-08-01', dueDate: '2026-08-08', status: 'paid', paidDate: '2026-08-01', currency: 'USD', items: [{ desc: 'Standard Maintenance Retainer (Aug 2026)', qty: 1, unitPrice: 90.00 }] },
     { id: 'INV-2026-3005', customerId: 'cust-c', serviceId: 'svc-006', issueDate: '2026-09-01', dueDate: '2026-09-08', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Standard Maintenance Retainer (Sep 2026)', qty: 1, unitPrice: 90.00 }] },
 
-    { id: 'INV-2026-4001', customerId: 'cust-d', serviceId: 'svc-007', issueDate: '2026-08-25', dueDate: '2026-09-01', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Odoo Community Platform — Setup fee + first month (Sep 2026)', qty: 1, unitPrice: 89.00 }] },
-    { id: 'INV-2026-4002', customerId: 'cust-d', serviceId: 'svc-010', issueDate: '2026-09-05', dueDate: '2026-09-12', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Order Intake Automation — First month (n8n Cloud Starter)', qty: 1, unitPrice: 75.00 }] },
+    { id: 'INV-2026-4001', customerId: 'cust-d', serviceId: 'svc-007', issueDate: '2026-08-25', dueDate: '2026-09-01', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Odoo Community Platform — Server & software setup', qty: 1, unitPrice: 650.00 }] },
+    { id: 'INV-2026-4002', customerId: 'cust-d', serviceId: 'svc-010', issueDate: '2026-09-05', dueDate: '2026-09-12', status: 'unpaid', paidDate: null, currency: 'USD', items: [{ desc: 'Order Intake Automation — Build & monitoring retainer (Sep 2026)', qty: 1, unitPrice: 35.00 }] },
+    { id: 'INV-2026-4003', customerId: 'cust-d', serviceId: 'svc-011', issueDate: '2026-08-20', dueDate: '2026-08-27', status: 'paid', paidDate: '2026-08-21', currency: 'USD', items: [{ desc: 'Ordering Website Revamp — Deposit (30%)', qty: 1, unitPrice: 840.00 }] },
 
     { id: 'INV-2026-3006', customerId: 'cust-c', serviceId: 'svc-009', issueDate: '2026-07-15', dueDate: '2026-07-22', status: 'paid', paidDate: '2026-07-15', currency: 'USD', items: [{ desc: 'In-Clinic Network & POS Setup — On-site installation', qty: 1, unitPrice: 1800.00 }] }
   ],
@@ -456,18 +492,44 @@ const ZP_SEED = {
       ]
     },
     {
-      id: 'task-004', serviceId: 'svc-001', customerId: 'cust-a',
-      title: 'Deploy Odoo ERP Platform on Hostinger VPS',
+      id: 'task-004', serviceId: 'svc-001', customerId: 'cust-a', assetId: 'asset-001',
+      title: 'Server Setup — Hostinger VPS + Odoo Install',
       assigneeId: 'team-1', status: 'done', priority: 'normal',
-      createdDate: '2024-02-20', dueDate: '2024-03-10', completedDate: '2024-03-10',
-      blockedReason: null,
+      createdDate: '2024-02-20', dueDate: '2024-03-08', completedDate: '2024-03-08',
+      blockedReason: null, charge: { amount: 300.00, currency: 'USD' },
       checklist: [
         { text: 'Provision Hostinger VPS KVM 2 instance', done: true },
         { text: 'Harden server (SSH, firewall, OS updates)', done: true },
         { text: 'Install Docker & deploy Odoo 17 CE + PostgreSQL', done: true },
         { text: 'Configure domain, DNS & SSL', done: true },
         { text: 'Set up automated backups', done: true },
-        { text: 'Smoke-test the deployment', done: true },
+        { text: 'Smoke-test the deployment', done: true }
+      ],
+      notes: []
+    },
+    {
+      id: 'task-009', serviceId: 'svc-001', customerId: 'cust-a', assetId: 'asset-002',
+      title: 'Configure Website Module',
+      assigneeId: 'team-3', status: 'done', priority: 'normal',
+      createdDate: '2024-03-08', dueDate: '2024-03-09', completedDate: '2024-03-09',
+      blockedReason: null, charge: { amount: 400.00, currency: 'USD' },
+      checklist: [
+        { text: 'Set up Odoo Website builder & theme', done: true },
+        { text: 'Build and publish the public pages', done: true },
+        { text: 'Connect the aegisretail.com domain', done: true }
+      ],
+      notes: []
+    },
+    {
+      id: 'task-010', serviceId: 'svc-001', customerId: 'cust-a', assetId: 'asset-002',
+      title: 'Configure Accounting Module',
+      assigneeId: 'team-1', status: 'done', priority: 'normal',
+      createdDate: '2024-03-09', dueDate: '2024-03-10', completedDate: '2024-03-10',
+      blockedReason: null, charge: { amount: 500.00, currency: 'USD' },
+      checklist: [
+        { text: 'Configure chart of accounts', done: true },
+        { text: 'Connect bank feed', done: true },
+        { text: 'Set up invoicing templates & tax rules', done: true },
         { text: 'Hand off admin credentials & documentation to customer', done: true }
       ],
       notes: []
@@ -538,6 +600,21 @@ const ZP_SEED = {
         { text: 'Hand off admin access & training notes', done: false }
       ],
       notes: [{ date: '2026-09-03', author: 'Priya Nadar', text: 'Gmail and Google Sheets connected. Building the order-parsing logic next.' }]
+    },
+    {
+      id: 'task-011', serviceId: 'svc-011', customerId: 'cust-d', assetId: 'asset-006',
+      title: 'Revamp Ordering Website', assigneeId: 'team-2', status: 'in-progress', priority: 'normal',
+      createdDate: '2026-08-20', dueDate: '2026-10-15', completedDate: null,
+      blockedReason: null,
+      checklist: [
+        { text: 'Repository & environment setup', done: true },
+        { text: 'Audit existing site & content', done: true },
+        { text: 'Implement responsive redesign', done: false },
+        { text: 'Rebuild checkout flow', done: false },
+        { text: 'QA across devices', done: false },
+        { text: 'Deploy & handover', done: false }
+      ],
+      notes: [{ date: '2026-08-20', author: 'Layla Haddad', text: 'Old site was hand-coded with no framework — rebuilding on React so future updates are easier.' }]
     }
   ],
 
@@ -571,6 +648,79 @@ const ZP_SEED = {
       ],
       status: 'scheduled',
       notes: []
+    }
+  ],
+
+  // Software the CUSTOMER owns and pays for directly — we never buy, resell, or mark up
+  // any third-party software or hosting. This is self-reported by the customer (or logged
+  // by the agency on their behalf) purely so the portal can track spend, forecast renewals,
+  // and flag likely savings. Everything we charge for is implementation/dev work, tracked
+  // on the linked service/task instead.
+  softwareAssets: [
+    {
+      id: 'asset-001', customerId: 'cust-a', name: 'Hostinger VPS KVM 2', vendor: 'Hostinger',
+      toolId: 'hostinger-vps', planId: 'vps-kvm-2', category: 'infrastructure',
+      deploymentType: 'cloud',
+      billing: { amount: 179.88, currency: 'USD', cycle: 'yearly', lastPaidDate: '2026-03-01', nextRenewalDate: '2027-03-01' },
+      reasonForRecurringCharge: null, usageNotes: '', vendorContact: null,
+      status: 'active', notes: 'Paid by Aegis directly to Hostinger — we only handle setup and maintenance.', addedDate: '2024-03-01'
+    },
+    {
+      id: 'asset-002', customerId: 'cust-a', name: 'Odoo Standard (2 users)', vendor: 'Odoo',
+      toolId: 'odoo', planId: 'standard', category: 'business-platform',
+      deploymentType: 'cloud',
+      billing: { amount: 746.40, currency: 'USD', cycle: 'yearly', lastPaidDate: '2026-01-15', nextRenewalDate: '2027-01-15' },
+      reasonForRecurringCharge: null, usageNotes: '', vendorContact: null,
+      status: 'active', notes: 'Paid by Aegis directly to Odoo.', addedDate: '2024-03-01'
+    },
+    {
+      id: 'asset-003', customerId: 'cust-b', name: 'Hostinger VPS KVM 1', vendor: 'Hostinger',
+      toolId: 'hostinger-vps', planId: 'vps-kvm-1', category: 'infrastructure',
+      deploymentType: 'cloud',
+      billing: { amount: 143.88, currency: 'USD', cycle: 'yearly', lastPaidDate: '2026-08-01', nextRenewalDate: '2027-08-01' },
+      reasonForRecurringCharge: null, usageNotes: '', vendorContact: null,
+      status: 'active', notes: 'Paid by Bluewave directly to Hostinger.', addedDate: '2024-08-01'
+    },
+    {
+      id: 'asset-004', customerId: 'cust-b', name: 'RetailTrack POS', vendor: 'RetailTrack Systems',
+      toolId: null, planId: null, category: 'business-platform',
+      deploymentType: 'local',
+      billing: { amount: 600.00, currency: 'USD', cycle: 'yearly', lastPaidDate: '2026-01-10', nextRenewalDate: '2027-01-10' },
+      reasonForRecurringCharge: null, usageNotes: 'One in-store terminal at the depot office.', vendorContact: null,
+      status: 'active', notes: 'Legacy point-of-sale software, installed locally on an in-store PC — added here for tracking, not something we set up.', addedDate: '2026-08-10'
+    },
+    {
+      id: 'asset-005', customerId: 'cust-b', name: 'Zapier Starter', vendor: 'Zapier',
+      toolId: 'zapier', planId: 'starter', category: 'automation',
+      deploymentType: 'cloud',
+      billing: { amount: 19.99, currency: 'USD', cycle: 'monthly', lastPaidDate: '2026-08-15', nextRenewalDate: '2026-09-15' },
+      reasonForRecurringCharge: null, usageNotes: '2 active Zaps: (1) new Shopify order → Slack alert, (2) low-stock CSV export → email.', automationCount: 2, vendorContact: null,
+      status: 'active', notes: '', addedDate: '2026-08-10'
+    },
+    {
+      id: 'asset-006', customerId: 'cust-d', name: 'Legacy Ordering Website', vendor: 'Freelance developer',
+      toolId: null, planId: null, category: 'website-development',
+      deploymentType: 'cloud',
+      billing: { amount: 3500.00, currency: 'USD', cycle: 'one-time', lastPaidDate: '2023-06-01', nextRenewalDate: null },
+      reasonForRecurringCharge: null, usageNotes: '', vendorContact: { name: 'J. Kowalski', email: 'jkowalski.dev@example.com', phone: '' },
+      status: 'active', notes: 'Original site built in 2023 — outdated design, not mobile-responsive. Now being revamped (see Ordering Website Revamp).', addedDate: '2026-08-18'
+    },
+    {
+      id: 'asset-007', customerId: 'cust-d', name: 'Hostinger VPS KVM 4', vendor: 'Hostinger',
+      toolId: 'hostinger-vps', planId: 'vps-kvm-4', category: 'infrastructure',
+      deploymentType: 'cloud',
+      billing: { amount: 347.88, currency: 'USD', cycle: 'yearly', lastPaidDate: '2026-08-20', nextRenewalDate: '2027-08-20' },
+      reasonForRecurringCharge: null, usageNotes: '', vendorContact: null,
+      status: 'active', notes: 'Paid by Nimbus Foods directly to Hostinger.', addedDate: '2026-08-20'
+    },
+    {
+      id: 'asset-009', customerId: 'cust-d', name: 'n8n Cloud Starter', vendor: 'n8n',
+      toolId: 'n8n', planId: 'cloud-starter', category: 'automation',
+      deploymentType: 'cloud',
+      billing: { amount: 20.00, currency: 'EUR', cycle: 'monthly', lastPaidDate: '2026-09-01', nextRenewalDate: '2026-10-01' },
+      reasonForRecurringCharge: 'Workflows combine multiple actions per trigger (e.g. log + Slack ping) — needs a tool with multi-step logic, not just single trigger→action automation.',
+      usageNotes: '', vendorContact: null,
+      status: 'active', notes: 'Paid by Nimbus Foods directly to n8n.', addedDate: '2026-09-01'
     }
   ]
 };
@@ -682,6 +832,43 @@ function zpUpcomingVisitsForAssignee(teamId) {
   return zpGetVisitsForAssignee(teamId)
     .filter(v => v.status === 'scheduled')
     .sort((a, b) => new Date(a.scheduledDate) - new Date(b.scheduledDate));
+}
+
+/* ---------------------------------- Software assets (customer-owned & paid) ---------------------------------- */
+
+function zpGetAsset(id) { return ZP.data.softwareAssets.find(a => a.id === id) || null; }
+function zpGetAssetsForCustomer(customerId) { return ZP.data.softwareAssets.filter(a => a.customerId === customerId); }
+
+/** Normalizes any billing cycle to an annual figure, for spend totals & comparisons. */
+function zpAssetAnnualCost(asset) {
+  const b = asset.billing;
+  if (b.cycle === 'monthly') return b.amount * 12;
+  if (b.cycle === 'yearly') return b.amount;
+  return 0; // one-time purchases don't recur
+}
+
+/** All tasks (work items) billed against a given software asset — e.g. every module setup done on one Odoo install. */
+function zpGetTasksForAsset(assetId) { return ZP.data.tasks.filter(t => t.assetId === assetId); }
+
+/** Total the agency has charged for work tied to one asset, from tasks that carry their own charge. */
+function zpAssetChargedTotal(assetId) {
+  return zpGetTasksForAsset(assetId).filter(t => t.charge).reduce((sum, t) => sum + t.charge.amount, 0);
+}
+
+/** Every service that references an asset (via assetIds) — e.g. the implementation project(s) built on top of it. */
+function zpGetServicesForAsset(assetId) {
+  return ZP.data.services.filter(s => (s.assetIds || []).includes(assetId));
+}
+
+function zpCustomerSoftwareSpend(customerId) {
+  const assets = zpGetAssetsForCustomer(customerId);
+  const annualTotal = assets.reduce((sum, a) => sum + zpAssetAnnualCost(a), 0);
+  const upcomingRenewals = assets
+    .filter(a => a.billing.nextRenewalDate)
+    .map(a => ({ asset: a, daysAway: zpDaysBetween(ZP_TODAY, a.billing.nextRenewalDate) }))
+    .filter(r => r.daysAway >= 0 && r.daysAway <= 60)
+    .sort((a, b) => a.daysAway - b.daysAway);
+  return { assets, annualTotal, upcomingRenewals };
 }
 
 function zpTeamStats(teamId) {

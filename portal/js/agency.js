@@ -141,8 +141,40 @@ document.addEventListener('DOMContentLoaded', function () {
         <tbody>${invoiceRows}</tbody>
       </table></div>
       ${renderAgencyAccountsSection(custId)}
+      ${renderAgencySoftwareSection(custId)}
     `;
     document.getElementById('customerModal').classList.add('open');
+  }
+
+  function renderAgencySoftwareSection(custId) {
+    const assets = zpGetAssetsForCustomer(custId);
+    const findings = zpAllSavingsForCustomer(custId).filter(f => !(zpGetAsset(f.assetId).dismissedFindings || []).includes(f.type));
+
+    const rows = assets.map(a => {
+      const chargedTotal = zpAssetChargedTotal(a.id);
+      return `<tr>
+        <td>${a.name}<br><span class="text-muted" style="font-size:0.78rem;">${a.vendor}</span></td>
+        <td>${a.deploymentType}</td>
+        <td>${zpFormatCurrency(a.billing.amount, a.billing.currency)}${a.billing.cycle === 'one-time' ? '' : '/' + (a.billing.cycle === 'monthly' ? 'mo' : 'yr')}</td>
+        <td>${a.billing.nextRenewalDate ? zpFormatDate(a.billing.nextRenewalDate) : '—'}</td>
+        <td>${chargedTotal > 0 ? zpFormatCurrency(chargedTotal) : '—'}</td>
+      </tr>`;
+    }).join('') || `<tr><td colspan="5" class="table-empty">Customer hasn't logged any software yet.</td></tr>`;
+
+    const findingsHtml = findings.length ? `
+      <div class="alert alert-success" style="margin-top:12px;">
+        💡 ${findings.length} savings opportunit${findings.length > 1 ? 'ies' : 'y'} flagged (worth mentioning proactively): ${findings.map(f => f.message).join(' · ')}
+      </div>` : '';
+
+    return `
+      <h3 style="font-size:0.95rem;margin:18px 0 10px;">Customer's Own Software &amp; Subscriptions</h3>
+      <p class="text-muted" style="font-size:0.8rem;margin-top:0;">Self-reported by the customer — they pay these vendors directly. "Charged by us" is only what we've billed for implementation work on top of it.</p>
+      <div class="table-wrap"><table class="zp-table">
+        <thead><tr><th>Software</th><th>Deployment</th><th>They Pay</th><th>Next Renewal</th><th>Charged by Us</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table></div>
+      ${findingsHtml}
+    `;
   }
 
   function renderAgencyAccountsSection(custId) {

@@ -92,6 +92,22 @@ document.addEventListener('DOMContentLoaded', function () {
       ? `<div class="kv"><div class="k">Provider / Plan</div><div class="v">${s.provider} — ${s.plan}</div></div>`
       : '';
 
+    const chargedTasks = zpGetTasksForService(s.id).filter(t => t.charge);
+    const workBreakdownHtml = chargedTasks.length ? `
+      <h3 style="margin:20px 0 12px;font-size:0.95rem;">Work Breakdown</h3>
+      <div class="table-wrap"><table class="zp-table">
+        <thead><tr><th>Work</th><th>Done By</th><th>Charge</th><th>Status</th></tr></thead>
+        <tbody>${chargedTasks.map(t => {
+          const member = zpGetTeamMember(t.assigneeId);
+          return `<tr><td>${t.title}</td><td>${member ? member.name : '—'}</td><td>${zpFormatCurrency(t.charge.amount, t.charge.currency)}</td><td>${zpBadge(t.status)}</td></tr>`;
+        }).join('')}</tbody>
+      </table></div>` : '';
+
+    const linkedAssets = (s.assetIds || []).map(zpGetAsset).filter(Boolean);
+    const linkedAssetsHtml = linkedAssets.length ? `
+      <p class="text-muted" style="font-size:0.82rem;margin:14px 0 0;">Built on your own <a href="software.html">${linkedAssets.map(a => a.name).join(', ')}</a> — we don't charge for that software itself, only the work above.</p>
+    ` : '';
+
     const milestonesHtml = s.milestones ? `
       <h3 style="margin:20px 0 12px;font-size:0.95rem;">Project Timeline</h3>
       <ul class="timeline">
@@ -119,6 +135,8 @@ document.addEventListener('DOMContentLoaded', function () {
         ${providerRow}
         ${billingRows}
       </div>
+      ${linkedAssetsHtml}
+      ${workBreakdownHtml}
       <h3 style="margin:20px 0 8px;font-size:0.95rem;">Technology Stack</h3>
       <div>${s.stack.map(t => `<span class="chip">${t}</span>`).join('')}</div>
       ${s.config ? `<h3 style="margin:20px 0 8px;font-size:0.95rem;">Delivery &amp; Configuration</h3>${zpRenderConfigDetail(s.config)}` : ''}

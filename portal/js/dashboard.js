@@ -31,6 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const next = stats.upcomingRenewals[0];
     alerts.push(`<div class="alert alert-info">🔔 <strong>${next.service.name}</strong> renews in ${next.daysAway} day${next.daysAway === 1 ? '' : 's'} (${zpFormatDate(next.service.billing.nextRenewal)}) at ${zpFormatCurrency(next.service.billing.customerPrice, next.service.billing.currency)}/mo.</div>`);
   }
+
+  const savingsFindings = zpAllSavingsForCustomer(customer.id).filter(f => !(zpGetAsset(f.assetId).dismissedFindings || []).includes(f.type));
+  if (savingsFindings.length > 0) {
+    const totalSavings = savingsFindings.reduce((s, f) => s + f.estimatedAnnualSavings, 0);
+    alerts.push(`<div class="alert alert-success">💡 We found ${savingsFindings.length} way${savingsFindings.length > 1 ? 's' : ''} to save up to ${zpFormatCurrency(totalSavings)}/yr on your software. <a href="software.html" style="color:inherit;font-weight:700;">See suggestions →</a></div>`);
+  }
+
   alertHost.innerHTML = alerts.join('');
 
   /* --- Stat tiles --- */
@@ -56,6 +63,22 @@ document.addEventListener('DOMContentLoaded', function () {
       <div class="foot">since ${zpFormatDate(customer.since)}</div>
     </div>
   `;
+
+  /* --- My Software summary --- */
+  const { assets, annualTotal, upcomingRenewals: assetRenewals } = zpCustomerSoftwareSpend(customer.id);
+  const softwareSummary = document.getElementById('softwareSummary');
+  if (assets.length === 0) {
+    softwareSummary.innerHTML = `<div class="empty-state"><div class="icon">💳</div>No software on file yet. <a href="software.html">Add what you're already paying for →</a></div>`;
+  } else {
+    softwareSummary.innerHTML = `
+      <div class="kv-list" style="margin-top:0;">
+        <div class="kv"><div class="k">Annual Spend</div><div class="v">${zpFormatCurrency(annualTotal)}</div></div>
+        <div class="kv"><div class="k">Tracked Subscriptions</div><div class="v">${assets.length}</div></div>
+        <div class="kv"><div class="k">Renewing Soon</div><div class="v">${assetRenewals.length}</div></div>
+        <div class="kv"><div class="k">Savings Flagged</div><div class="v">${savingsFindings.length}</div></div>
+      </div>
+    `;
+  }
 
   /* --- Service cards (top 4) --- */
   const grid = document.getElementById('serviceGrid');
