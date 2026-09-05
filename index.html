@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zainpreneur Agency</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Zainpreneur Agency</h1>
+            <p>Business growth and automation solutions</p>
+        </header>
+
+        <main>
+            <section id="ingestion">
+                <h2>Document Ingestion</h2>
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/, PDF(.*)">
+                    <div class="upload-text">
+                        <span>Click or drag files here</span>
+                        <p>to scan or upload documents</p>
+                    </div>
+                </div>
+                <div class="camera-section" id="cameraSection" style="display:none;">
+                    <button id="openCameraBtn">Open Camera</button>
+                    <video id="previewVideo" autoplay muted></video>
+                    <canvas id="captureCanvas" style="display:none;"></canvas>
+                    <button id="captureBtn" style="display:none;">Capture</button>
+                </div>
+            </section>
+
+            <section id="htr" style="display:none;">
+                <h2>Handwriting Text Recognition (HTR)</h2>
+                <div class="htr-interface">
+                    <div class="original-image">
+                        <h3>Original</h3>
+                        <img id="originalImg" src="#" alt="Original document">
+                    </div>
+                    <div class="verified-text">
+                        <h3>Verified Text</h3>
+                        <div id="verifiedText" class="text-area" contenteditable="true">Enter text here...</div>
+                        <div id="confidenceBars" class="confidence-bars"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="schema" style="display:none;">
+                <h2>Dynamic Schema Builder</h2>
+                <div class="schema-builder">
+                    <div class="entity-fields">
+                        <h3>Entities & Fields</h3>
+                        <div id="entityFields">
+                            <div class="entity-row">
+                                <input type="text" placeholder="Entity name">
+                                <button class="add-field">+ Add Field</button>
+                                <button class="remove-entity">-</button>
+                            </div>
+                        </div>
+                        <button id="addEntity">+ Add Entity</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="validation" style="display:none;">
+                <h2>Cleansing & Validation</h2>
+                <p>Automatic standardization and correction dictionary active</p>
+                <div class="validation-status">
+                    <span>Date format: <strong>YYYY-MM-DD</strong></span>
+                    <span>Phone format: <strong>(XXX) XXX-XXXX</strong></span>
+                    <span>Amount: <strong>Currency + numeric</strong></span>
+                </div>
+            </section>
+
+            <section id="addendums" style="display:none;">
+                <h2>Batch Addendums</h2>
+                <p>Reopen exported batches to add corrections as linked addenda</p>
+            </section>
+
+            <section id="export" style="display:none;">
+                <h2>ERP Export</h2>
+                <div class="export-options">
+                    <label>
+                        <input type="radio" name="format" value="csv" checked> CSV
+                    </label>
+                    <label>
+                        <input type="radio" name="format" value="json"> JSON
+                    </label>
+                    <label>
+                        <input type="radio" name="format" value="sql"> SQL Insert
+                    </label>
+                </div>
+                <button id="exportBtn">Generate Export</button>
+                <div id="exportResult" class="export-result"></div>
+            </section>
+
+            <section id="batch">
+                <h2>Batch Processing</h2>
+                <p>Process multiple documents and extract all data at once</p>
+                <div class="upload-area" style="margin: 20px 0; padding: 20px; border: 2px dashed var(--secondary); border-radius: 8px; cursor: pointer;">
+                    <input type="file" id="fileInputBatch" accept="image/, PDF(.*)" style="display: none;">
+                    <div>
+                        <span>Drag & drop or click to add documents</span>
+                        <p>Supported: JPEG, PNG, GIF, WebP | Max 10MB per file | Max 10 files per batch</p>
+                    </div>
+                </div>
+                <div id="batchDisplay">No documents in batch queue</div>
+                <button id="extractAllBtn" style="width: 100%; padding: 10px; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                    Extract All Data
+                </button>
+                <p class="batch-hint" style="margin-top: 10px; font-size: 0.875color: var(--muted);">
+                    Click document thumbnails, enter verified text, then click "Extract All Data"
+                </p>
+            </section>
+        </main>
+
+        <footer>
+            <p>Zainpreneur Agency - Local-first, 100% offline</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
